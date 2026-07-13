@@ -1728,7 +1728,8 @@ function addWorkEvent(event) {
   state.events.push({
     id: makeId("e"),
     title: values.title.trim(),
-    date: values.date
+    date: values.date,
+    time: values.time || ""
   });
   form.reset();
   saveState();
