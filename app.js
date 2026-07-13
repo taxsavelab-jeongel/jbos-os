@@ -609,6 +609,11 @@ function initCloud() {
   bindAuthUi();
 
   sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      showAuthOverlay();
+      if (window.jbosApplyAuthMode) window.jbosApplyAuthMode("recovery");
+      return;
+    }
     if (session?.user) {
       currentUser = session.user;
       hideAuthOverlay();
@@ -616,6 +621,7 @@ function initCloud() {
       setConnectionStatus(`클라우드 연결됨 · ${currentUser.email}`, "connected");
       await loadCloudState();
       refreshLiveData();
+      ensureProfile();
     } else {
       currentUser = null;
       backend.connected = false;
@@ -630,37 +636,111 @@ function bindAuthUi() {
   const form = document.getElementById("authForm");
   const toggle = document.getElementById("authToggle");
   const logoutBtn = document.getElementById("logoutBtn");
+  const googleBtn = document.getElementById("googleBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const extra = document.getElementById("authExtra");
+  const emailLabel = document.getElementById("authEmailLabel");
+  const pwToggle = document.getElementById("pwToggle");
+  if (pwToggle && form) {
+    pwToggle.addEventListener("click", () => {
+      const input = form.elements.password;
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      const eye = pwToggle.querySelector(".pw-eye");
+      const eyeOff = pwToggle.querySelector(".pw-eye-off");
+      if (eye) eye.hidden = show;
+      if (eyeOff) eyeOff.hidden = !show;
+      pwToggle.setAttribute("aria-label", show ? "비밀번호 숨기기" : "비밀번호 표시");
+      pwToggle.setAttribute("title", show ? "비밀번호 숨기기" : "비밀번호 표시");
+    });
+  }
   let mode = "signin";
 
+  function applyMode(next) {
+    mode = next;
+    const titles = { signin: "로그인", signup: "회원가입", recovery: "새 비밀번호 설정" };
+    const submits = { signin: "로그인", signup: "가입하기", recovery: "비밀번호 변경" };
+    document.getElementById("authTitle").textContent = titles[mode] || "로그인";
+    document.getElementById("authSubmit").textContent = submits[mode] || "로그인";
+    if (extra) {
+      extra.hidden = mode !== "signup";
+      ["name", "phone", "company"].forEach((field) => {
+        if (form && form.elements[field]) form.elements[field].required = mode === "signup";
+      });
+    }
+    if (emailLabel) emailLabel.hidden = mode === "recovery";
+    if (form && form.elements.email) form.elements.email.required = mode !== "recovery";
+    if (googleBtn) googleBtn.hidden = mode === "recovery";
+    if (toggle) toggle.textContent = mode === "signin" ? "처음이신가요? 회원가입" : "이미 계정이 있어요. 로그인";
+    setAuthMsg("");
+  }
+  window.jbosApplyAuthMode = applyMode;
+
   if (toggle) {
-    toggle.addEventListener("click", () => {
-      mode = mode === "signin" ? "signup" : "signin";
-      document.getElementById("authTitle").textContent = mode === "signin" ? "로그인" : "회원가입";
-      document.getElementById("authSubmit").textContent = mode === "signin" ? "로그인" : "가입하기";
-      toggle.textContent = mode === "signin" ? "처음이신가요? 회원가입" : "이미 계정이 있어요. 로그인";
-      setAuthMsg("");
+    toggle.addEventListener("click", () => applyMode(mode === "signin" ? "signup" : "signin"));
+  }
+
+  if (googleBtn) {
+    googleBtn.addEventListener("click", async () => {
+      setAuthMsg("구글 로그인으로 이동합니다...");
+      const { error } = await sb.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin + window.location.pathname }
+      });
+      if (error) setAuthMsg(koreanAuthError(error));
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener("click", async () => {
+      const email = (form && form.elements.email.value || "").trim();
+      if (!email) {
+        setAuthMsg("가입한 이메일을 위 칸에 입력한 뒤 다시 눌러주세요.");
+        return;
+      }
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      setAuthMsg(error ? koreanAuthError(error) : "재설정 메일을 보냈습니다. 메일함을 확인해주세요.");
     });
   }
 
   if (form) {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const email = form.elements.email.value.trim();
+      const email = (form.elements.email.value || "").trim();
       const password = form.elements.password.value;
       setAuthMsg("처리 중...");
       try {
-        if (mode === "signin") {
+        if (mode === "recovery") {
+          const { error } = await sb.auth.updateUser({ password });
+          if (error) throw error;
+          setAuthMsg("");
+          showToast("비밀번호를 변경했습니다.");
+          applyMode("signin");
+          hideAuthOverlay();
+        } else if (mode === "signin") {
           const { error } = await sb.auth.signInWithPassword({ email, password });
           if (error) throw error;
+          setAuthMsg("");
         } else {
-          const { data, error } = await sb.auth.signUp({ email, password });
+          const meta = {
+            name: ((form.elements.name && form.elements.name.value) || "").trim(),
+            phone: ((form.elements.phone && form.elements.phone.value) || "").trim(),
+            company: ((form.elements.company && form.elements.company.value) || "").trim()
+          };
+          if (!meta.name || !meta.phone || !meta.company) {
+            setAuthMsg("이름, 핸드폰 번호, 회사명을 모두 입력해주세요.");
+            return;
+          }
+          const { data, error } = await sb.auth.signUp({ email, password, options: { data: meta } });
           if (error) throw error;
           if (!data.session) {
             setAuthMsg("가입 확인 메일을 보냈습니다. 메일함에서 확인 후 로그인하세요.");
             return;
           }
+          setAuthMsg("");
         }
-        setAuthMsg("");
       } catch (error) {
         console.warn(error);
         setAuthMsg(koreanAuthError(error));
@@ -672,6 +752,70 @@ function bindAuthUi() {
     logoutBtn.addEventListener("click", async () => {
       await sb.auth.signOut();
       showToast("로그아웃했습니다.");
+    });
+  }
+}
+
+async function ensureProfile() {
+  if (!sb || !currentUser) return;
+  try {
+    const { data } = await sb
+      .from("jbos_profiles")
+      .select("name, phone, company")
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+    const meta = currentUser.user_metadata || {};
+    const merged = {
+      name: ((data && data.name) || meta.name || meta.full_name || "").trim(),
+      phone: ((data && data.phone) || meta.phone || "").trim(),
+      company: ((data && data.company) || meta.company || "").trim()
+    };
+    if (merged.name && merged.phone && merged.company) {
+      if (!data || !data.name || !data.phone || !data.company) await saveProfile(merged);
+      return;
+    }
+    showProfileOverlay(merged);
+  } catch (error) {
+    console.warn("profile check failed", error);
+  }
+}
+
+async function saveProfile(values) {
+  const { error } = await sb.from("jbos_profiles").upsert({
+    user_id: currentUser.id,
+    email: currentUser.email,
+    name: values.name,
+    phone: values.phone,
+    company: values.company,
+    updated_at: new Date().toISOString()
+  });
+  if (error) throw error;
+}
+
+function showProfileOverlay(prefill) {
+  const overlay = document.getElementById("profileOverlay");
+  const form = document.getElementById("profileForm");
+  if (!overlay || !form) return;
+  form.elements.name.value = prefill.name || "";
+  form.elements.phone.value = prefill.phone || "";
+  form.elements.company.value = prefill.company || "";
+  overlay.hidden = false;
+  if (!form.dataset.bound) {
+    form.dataset.bound = "1";
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        await saveProfile({
+          name: form.elements.name.value.trim(),
+          phone: form.elements.phone.value.trim(),
+          company: form.elements.company.value.trim()
+        });
+        overlay.hidden = true;
+        showToast("프로필을 저장했습니다. 환영합니다!");
+      } catch (error) {
+        console.warn(error);
+        showToast("프로필 저장에 실패했습니다. 다시 시도해주세요.");
+      }
     });
   }
 }
