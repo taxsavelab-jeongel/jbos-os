@@ -1776,3 +1776,192 @@ a.indicator-card {
 .pw-toggle:hover {
   color: var(--brand);
 }
+
+
+/* ===================================================================
+   J-BOS v5: 모바일 최적화 (반응형 대폭 보강)
+   =================================================================== */
+
+/* 가로 넘침 방지 — "축소된 데스크톱" 증상 제거 */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* iOS 입력 시 자동 확대 방지 (16px 이상) */
+@media (max-width: 760px) {
+  input, select, textarea, button {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 760px) {
+  /* 그리드 자식이 넘침을 강제하지 않도록 */
+  .app-shell > *,
+  .dashboard-grid > *,
+  .work-grid > *,
+  .metric-grid > *,
+  .work-metric-grid > *,
+  .indicator-grid > * {
+    min-width: 0;
+  }
+
+  /* 상단 내비: 스크롤 알약을 스티키로 — 항상 손 닿게 */
+  .sidebar {
+    position: sticky;
+    top: 0;
+  }
+
+  /* 검색창은 한 줄 전체 */
+  .search-wrap {
+    width: 100%;
+  }
+
+  /* 지표 카드: 폰에서는 2열이 스캔하기 좋음 */
+  .metric-grid,
+  .work-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px;
+  }
+
+  .metric-card {
+    min-height: 84px;
+    padding: 13px;
+  }
+
+  .metric-card strong {
+    font-size: 26px;
+  }
+
+  .metric-card span {
+    font-size: 12px;
+  }
+
+  .metric-card p {
+    font-size: 11px;
+  }
+
+  /* 모든 콘텐츠 패널은 한 열로 */
+  .dashboard-grid,
+  .work-grid,
+  .news-board,
+  .indicator-grid,
+  .client-grid,
+  .form-grid,
+  .task-columns {
+    grid-template-columns: 1fr !important;
+  }
+
+  .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* 지표/주식 카드 읽기 좋게 */
+  .indicator-card {
+    padding: 14px;
+  }
+
+  .indicator-card strong,
+  .stock-price {
+    font-size: 20px;
+  }
+
+  /* 인라인 폼(일정·파일 추가)은 세로 스택 + 버튼 전체폭 */
+  .inline-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .inline-form input,
+  .inline-form select,
+  .inline-form button {
+    width: 100%;
+  }
+
+  /* 할 일 항목: 체크박스 + 내용 + 삭제, 우선순위 배지는 아래로 */
+  .task-item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    row-gap: 4px;
+  }
+
+  /* 프로젝트/컴팩트 카드 내부가 넘치지 않게 */
+  .project-card,
+  .compact-item,
+  .news-card-lite,
+  .doc-item,
+  .weather-card {
+    min-width: 0;
+  }
+
+  .project-actions {
+    flex-wrap: wrap;
+  }
+
+  .project-actions select,
+  .project-actions button {
+    flex: 1 1 auto;
+  }
+
+  /* 프롬프트 스튜디오: 입력·출력 세로 */
+  .prompt-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .prompt-output-panel textarea,
+  #promptOutput {
+    min-height: 320px;
+  }
+
+  /* 단계 필터/세그먼트: 가로 스크롤 허용 */
+  .segment-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .segment-row::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* 아주 작은 화면(≤430px) 추가 조정 */
+@media (max-width: 430px) {
+  .workspace {
+    padding: 12px 10px 40px;
+  }
+
+  .topbar h1 {
+    font-size: 21px;
+  }
+
+  .metric-card strong {
+    font-size: 23px;
+  }
+
+  /* 로그인/프로필 카드: 화면에 꽉 맞추고 스크롤 */
+  .auth-overlay {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .auth-card {
+    padding: 22px 18px;
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+  }
+
+  .nav-item {
+    min-width: 96px;
+    min-height: 42px;
+  }
+}
+
+/* 안전영역(노치/홈바) 대응 */
+@supports (padding: max(0px)) {
+  @media (max-width: 760px) {
+    .workspace {
+      padding-bottom: max(40px, env(safe-area-inset-bottom));
+    }
+  }
+}
