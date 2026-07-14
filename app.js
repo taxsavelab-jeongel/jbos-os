@@ -390,7 +390,16 @@ const defaultState = {
     selectedProjectId: "",
     search: "",
     workFocus: "",
-    taskFilter: ""
+    taskFilter: "",
+    moduleVisibility: {
+      news: true,
+      economy: true,
+      weather: true,
+      calendar: true,
+      email: true,
+      files: true,
+      automation: true
+    }
   },
   projects: [],
   tasks: [],
@@ -493,7 +502,11 @@ function cacheElements() {
     "importBtn",
     "importFile",
     "toast",
-    "quickPromptBtn"
+    "quickPromptBtn",
+    "moduleSettingsBtn",
+    "moduleSettingsOverlay",
+    "moduleSettingsForm",
+    "closeModuleSettingsBtn"
   ].forEach((id) => {
     els[id] = document.getElementById(id);
   });
@@ -537,6 +550,8 @@ function initializeControls() {
   els.exportBtn.addEventListener("click", exportState);
   els.importBtn.addEventListener("click", () => els.importFile.click());
   els.importFile.addEventListener("change", importState);
+
+  bindModuleSettingsUi();
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("change", handleDocumentChange);
@@ -1127,14 +1142,18 @@ function renderWork() {
   const economyItems = state.economy || workDefaults.economy;
   const stockItems = state.stocks || workDefaults.stocks;
 
-  els.workMetricGrid.innerHTML = [
-    metric("뉴스 소재", (state.news || []).length, "정책·법·금융·기업 오너 이슈", "work", { workFocus: "news" }),
-    metric("경제 지표", economyItems.length + stockItems.length, "시장 지표 + 주요 주식", "work", { workFocus: "economy" }),
-    metric("이번 주 일정", calendarNeedsSetup ? "확인 필요" : upcomingEvents, calendarNeedsSetup ? "공유 캘린더 확인" : "상담·마감·촬영", "work", { workFocus: "calendar" }),
-    metric("이메일", unreadEmails, "확인할 업무 메일", "work", { workFocus: "email" }),
-    metric("파일", fileCount, "브랜드·법령·콘텐츠 자료", "work", { workFocus: "files" }),
-    metric("자동화", activeAutos, "활성 운영 루틴", "work", { workFocus: "automation" })
-  ].join("");
+  const workMetrics = [
+    { key: "news", node: metric("뉴스 소재", (state.news || []).length, "정책·법·금융·기업 오너 이슈", "work", { workFocus: "news" }) },
+    { key: "economy", node: metric("경제 지표", economyItems.length + stockItems.length, "시장 지표 + 주요 주식", "work", { workFocus: "economy" }) },
+    { key: "calendar", node: metric("이번 주 일정", calendarNeedsSetup ? "확인 필요" : upcomingEvents, calendarNeedsSetup ? "공유 캘린더 확인" : "상담·마감·촬영", "work", { workFocus: "calendar" }) },
+    { key: "email", node: metric("이메일", unreadEmails, "확인할 업무 메일", "work", { workFocus: "email" }) },
+    { key: "files", node: metric("파일", fileCount, "브랜드·법령·콘텐츠 자료", "work", { workFocus: "files" }) },
+    { key: "automation", node: metric("자동화", activeAutos, "활성 운영 루틴", "work", { workFocus: "automation" }) }
+  ];
+  els.workMetricGrid.innerHTML = workMetrics
+    .filter((item) => isModuleVisible(item.key))
+    .map((item) => item.node)
+    .join("") || empty("켜져 있는 항목이 없습니다. 화면 구성 설정(⚙)에서 항목을 켜주세요.");
 
   renderWorkFocus();
 
@@ -1193,7 +1212,55 @@ function renderWorkFocus() {
   els.workGrid.classList.toggle("is-focused", Boolean(focus));
 
   document.querySelectorAll("[data-work-module]").forEach((panel) => {
-    panel.classList.toggle("is-focused", !focus || panel.dataset.workModule === focus);
+    const moduleKey = panel.dataset.workModule;
+    const visible = isModuleVisible(moduleKey);
+    panel.hidden = !visible;
+    panel.classList.toggle("is-focused", visible && (!focus || moduleKey === focus));
+  });
+}
+
+function isModuleVisible(key) {
+  const visibility = state.ui.moduleVisibility || {};
+  return visibility[key] !== false;
+}
+
+function bindModuleSettingsUi() {
+  if (!els.moduleSettingsBtn || !els.moduleSettingsForm) return;
+
+  const openOverlay = () => {
+    const visibility = state.ui.moduleVisibility || {};
+    Array.from(els.moduleSettingsForm.elements).forEach((input) => {
+      if (input.type === "checkbox") {
+        input.checked = visibility[input.name] !== false;
+      }
+    });
+    els.moduleSettingsOverlay.hidden = false;
+  };
+
+  const closeOverlay = () => {
+    els.moduleSettingsOverlay.hidden = true;
+  };
+
+  els.moduleSettingsBtn.addEventListener("click", openOverlay);
+  if (els.closeModuleSettingsBtn) {
+    els.closeModuleSettingsBtn.addEventListener("click", closeOverlay);
+  }
+  els.moduleSettingsOverlay.addEventListener("click", (event) => {
+    if (event.target === els.moduleSettingsOverlay) closeOverlay();
+  });
+
+  els.moduleSettingsForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(els.moduleSettingsForm);
+    const nextVisibility = {};
+    ["news", "economy", "weather", "calendar", "email", "files", "automation"].forEach((key) => {
+      nextVisibility[key] = formData.get(key) === "on";
+    });
+    state.ui.moduleVisibility = nextVisibility;
+    saveState();
+    closeOverlay();
+    renderCurrentView();
+    showToast("화면 구성을 저장했습니다.");
   });
 }
 

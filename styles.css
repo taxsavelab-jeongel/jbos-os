@@ -1677,6 +1677,47 @@ a.indicator-card {
   color: var(--brand);
 }
 
+/* ===== J-BOS v2: 화면 구성 설정(맞춤형 대시보드) ===== */
+.module-settings-card {
+  width: min(420px, 100%);
+}
+
+.module-toggle-row {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--ink, #1f2933);
+}
+
+.module-toggle-row:last-of-type {
+  border-bottom: none;
+}
+
+.module-toggle-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--brand, #d90024);
+  cursor: pointer;
+}
+
+.module-settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.module-settings-actions .primary-button {
+  width: auto;
+  flex: 1;
+}
+
 /* ===== J-BOS v2: 실시간 지표 라벨 ===== */
 .live-pill {
   display: inline-block;
