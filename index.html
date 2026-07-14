@@ -88,6 +88,53 @@
       </form>
     </div>
   </div>
+  <div class="auth-overlay" id="moduleSettingsOverlay" hidden>
+    <div class="auth-card module-settings-card">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">J</div>
+        <div>
+          <strong>J-BOS</strong>
+          <span>JeongEL Business OS</span>
+        </div>
+      </div>
+      <h2>화면 구성 설정</h2>
+      <p class="auth-sub">업무허브에서 보고 싶은 항목만 켜두세요. 끈 항목은 화면에서 숨겨집니다.</p>
+      <form id="moduleSettingsForm">
+        <label class="module-toggle-row">
+          <span>뉴스 소재</span>
+          <input type="checkbox" name="news" checked>
+        </label>
+        <label class="module-toggle-row">
+          <span>경제 지표</span>
+          <input type="checkbox" name="economy" checked>
+        </label>
+        <label class="module-toggle-row">
+          <span>날씨</span>
+          <input type="checkbox" name="weather" checked>
+        </label>
+        <label class="module-toggle-row">
+          <span>캘린더 · 일정</span>
+          <input type="checkbox" name="calendar" checked>
+        </label>
+        <label class="module-toggle-row">
+          <span>이메일</span>
+          <input type="checkbox" name="email" checked>
+        </label>
+        <label class="module-toggle-row">
+          <span>파일</span>
+          <input type="checkbox" name="files" checked>
+        </label>
+        <label class="module-toggle-row">
+          <span>자동화</span>
+          <input type="checkbox" name="automation" checked>
+        </label>
+        <div class="module-settings-actions">
+          <button type="button" class="text-button" id="closeModuleSettingsBtn">닫기</button>
+          <button class="primary-button" type="submit">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <div class="app-shell">
     <aside class="sidebar" aria-label="주요 메뉴">
       <div class="brand">
@@ -150,6 +197,7 @@
           <button class="icon-button" id="exportBtn" type="button" title="데이터 내보내기">↓</button>
           <button class="icon-button" id="importBtn" type="button" title="데이터 불러오기">↑</button>
           <button class="primary-button" id="newProjectBtn" type="button">새 프로젝트</button>
+          <button class="icon-button" id="moduleSettingsBtn" type="button" title="화면 구성 설정">⚙</button>
           <button class="icon-button" id="logoutBtn" type="button" title="로그아웃">⏻</button>
           <input id="importFile" type="file" accept="application/json" hidden>
         </div>
