@@ -3,6 +3,7 @@ const STORAGE_KEY = "jbos-os-state-v2";
 // ===== J-BOS Cloud (Supabase) =====
 const SUPABASE_URL = "https://zyzcxuhxxtnwajlmqmsn.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5emN4dWh4eHRud2FqbG1xbXNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5Mzc0MjMsImV4cCI6MjA5OTUxMzQyM30.rXFLYlyUfbd_lGfO7vfSG1H54Lqe-a0Y-PEKa7XmDyg";
+const GOOGLE_INTEGRATION_SCOPES = "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/gmail.readonly";
 let sb = null;
 let currentUser = null;
 let cloudSaveTimer = null;
@@ -223,8 +224,8 @@ const workDefaults = {
     {
       id: "mail-guide",
       sender: "J-BOS",
-      subject: "Gmail 연동 준비 중",
-      preview: "구글 메일 자동 연동은 다음 업데이트에서 제공됩니다. 그때까지 중요한 메일 메모를 이곳에 남길 수 있습니다.",
+      subject: "Gmail 자동 연동 대기 중",
+      preview: "로그아웃 후 '구글로 로그인'을 다시 눌러 권한 동의 화면까지 완료하면 실제 Gmail 받은편지함이 여기에 표시됩니다.",
       tag: "안내",
       time: "예정"
     }
@@ -635,6 +636,9 @@ function initCloud() {
       backend.connected = true;
       setConnectionStatus(`클라우드 연결됨 · ${currentUser.email}`, "connected");
       await loadCloudState();
+      if (session.provider_refresh_token) {
+        storeGoogleRefreshToken(session.provider_refresh_token, GOOGLE_INTEGRATION_SCOPES);
+      }
       refreshLiveData();
       ensureProfile();
     } else {
@@ -700,7 +704,11 @@ function bindAuthUi() {
       setAuthMsg("구글 로그인으로 이동합니다...");
       const { error } = await sb.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: window.location.origin + window.location.pathname }
+        options: {
+          redirectTo: window.location.origin + window.location.pathname,
+          scopes: GOOGLE_INTEGRATION_SCOPES,
+          queryParams: { access_type: "offline", prompt: "consent" }
+        }
       });
       if (error) setAuthMsg(koreanAuthError(error));
     });
@@ -887,6 +895,100 @@ async function loadCloudState() {
 async function refreshLiveData() {
   fetchLiveMarket();
   fetchLiveWeather();
+  if (currentUser) {
+    fetchLiveCalendar();
+    fetchLiveGmail();
+  }
+}
+
+// ===== 구글 캘린더 · Gmail 실연동 =====
+async function getSupabaseAccessToken() {
+  if (!sb) return "";
+  const { data } = await sb.auth.getSession();
+  return data?.session?.access_token || "";
+}
+
+async function storeGoogleRefreshToken(refreshToken, scope) {
+  try {
+    const accessToken = await getSupabaseAccessToken();
+    if (!accessToken) return;
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/google-store-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ refresh_token: refreshToken, scope })
+    });
+    if (response.ok) {
+      showToast("구글 캘린더·Gmail 연동 정보를 저장했습니다.");
+    }
+  } catch (error) {
+    console.warn("google token store failed", error);
+  }
+}
+
+async function fetchLiveCalendar() {
+  try {
+    const accessToken = await getSupabaseAccessToken();
+    if (!accessToken) return;
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/google-calendar`, {
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${accessToken}` }
+    });
+    const payload = await response.json();
+    state.integrations = state.integrations || structuredCloneSafe(workDefaults.integrations);
+    if (payload.connected) {
+      state.integrations.calendar = {
+        connected: true,
+        syncStatus: "ok",
+        sources: ["Google Calendar"],
+        lastSynced: new Date().toISOString()
+      };
+      state.events = payload.events || [];
+      renderCurrentView();
+    } else {
+      state.integrations.calendar = {
+        ...(state.integrations.calendar || {}),
+        connected: false,
+        syncStatus: payload.needsSetup ? "needs_setup" : "needs_consent"
+      };
+    }
+  } catch (error) {
+    console.warn("calendar fetch failed", error);
+  }
+}
+
+async function fetchLiveGmail() {
+  try {
+    const accessToken = await getSupabaseAccessToken();
+    if (!accessToken) return;
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/google-gmail`, {
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${accessToken}` }
+    });
+    const payload = await response.json();
+    state.integrations = state.integrations || structuredCloneSafe(workDefaults.integrations);
+    if (payload.connected) {
+      state.integrations.gmail = {
+        connected: true,
+        inboxTotal: payload.inboxTotal || 0,
+        inboxUnread: payload.inboxUnread || 0,
+        importantUnread: payload.importantUnread || 0,
+        lastSynced: new Date().toISOString()
+      };
+      if (payload.emails && payload.emails.length) {
+        state.emails = payload.emails;
+      }
+      renderCurrentView();
+    } else {
+      state.integrations.gmail = {
+        ...(state.integrations.gmail || {}),
+        connected: false
+      };
+    }
+  } catch (error) {
+    console.warn("gmail fetch failed", error);
+  }
 }
 
 async function fetchLiveMarket() {
@@ -1352,13 +1454,17 @@ function renderEventList(items, withDelete = false) {
 }
 
 function renderCalendarSyncCard() {
+  const status = state.integrations?.calendar?.syncStatus;
+  const message = status === "needs_setup"
+    ? "구글 캘린더 연동이 아직 준비되지 않았습니다. 관리자가 백엔드 설정을 완료하면 자동으로 연동됩니다."
+    : "구글 캘린더 접근 권한이 없습니다. 로그아웃 후 '구글로 로그인'을 다시 누르면(권한 동의 화면 포함) 자동으로 연동됩니다.";
   return `
     <article class="calendar-sync-card">
       <div class="calendar-sync-head">
         <span>Google Calendar</span>
-        <strong>연동 준비 중</strong>
+        <strong>연동 필요</strong>
       </div>
-      <p>구글 캘린더 자동 연동은 다음 업데이트에서 제공됩니다. 지금은 아래에서 일정을 직접 추가해 관리하세요.</p>
+      <p>${h(message)}</p>
     </article>
   `;
 }
@@ -1406,7 +1512,8 @@ function upcomingCalendarItems() {
 }
 
 function needsCalendarSetup() {
-  return state.integrations?.calendar?.syncStatus === "needs_calendar_id";
+  const status = state.integrations?.calendar?.syncStatus;
+  return status === "needs_calendar_id" || status === "needs_consent" || status === "needs_setup";
 }
 
 function renderStageSummary() {
