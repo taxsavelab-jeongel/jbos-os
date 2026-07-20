@@ -10,6 +10,7 @@ let cloudSaveTimer = null;
 let cloudReady = false;
 let marketAsOf = "";
 let weatherAsOf = "";
+const aiRunningProjects = new Set();
 
 const stages = [
   { id: "research", label: "리서치", file: "01_인기콘텐츠_리서치.md" },
@@ -1093,6 +1094,66 @@ async function fetchLiveNews() {
   }
 }
 
+async function runProjectAI(projectId) {
+  const project = state.projects.find((item) => item.id === projectId);
+  if (!project) return;
+  if (project.stage === "review") {
+    showToast("승인 단계는 정엘 소장님이 직접 진행합니다.");
+    return;
+  }
+  if (aiRunningProjects.has(projectId)) return;
+
+  const accessToken = await getSupabaseAccessToken();
+  if (!accessToken) {
+    showToast("AI 실행은 클라우드 로그인 후 사용할 수 있습니다.");
+    return;
+  }
+
+  aiRunningProjects.add(projectId);
+  renderCurrentView();
+  showToast("AI가 작업을 시작했습니다. 1~2분 정도 걸릴 수 있어요.");
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/content-ai-run`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        stage: project.stage,
+        topic: project.title,
+        offer: project.offer || "",
+        audience: project.audience || "",
+        notes: project.notes || "",
+        dueDate: project.dueDate || ""
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok || payload.error) {
+      throw new Error(payload.error || `HTTP ${response.status}`);
+    }
+
+    const header = `\n\n---\n### 🤖 AI 실행 결과 · ${payload.stageLabel} · ${payload.generatedAt} · ${payload.model}\n\n`;
+    const footer = `\n\n(웹검색 ${payload.usage?.search_count || 0}회 · 입력 ${payload.usage?.input_tokens || 0} / 출력 ${payload.usage?.output_tokens || 0} 토큰 · 사람 검토 필요)`;
+    project.notes = `${project.notes || ""}${header}${payload.output}${footer}`.trim();
+
+    const files = Array.isArray(payload.files) ? payload.files : [];
+    project.checklist = Array.from(new Set([...(project.checklist || []), ...files]));
+
+    saveState();
+    aiRunningProjects.delete(projectId);
+    renderCurrentView();
+    showToast(`"${payload.stageLabel}" 단계 AI 작업이 끝났습니다. 메모에서 결과를 검토해주세요.`);
+  } catch (error) {
+    aiRunningProjects.delete(projectId);
+    renderCurrentView();
+    showToast(`AI 실행 실패: ${error.message || error}`);
+    console.warn("runProjectAI failed", error);
+  }
+}
+
 const WEATHER_CODES = {
   0: "맑음", 1: "대체로 맑음", 2: "구름 조금", 3: "흐림",
   45: "안개", 48: "짙은 안개",
@@ -1752,6 +1813,31 @@ function renderProjectDetail(project) {
           `;
         }).join("")}
       </div>
+      ${renderAiRunBox(project)}
+    </div>
+  `;
+}
+
+function renderAiRunBox(project) {
+  if (project.stage === "review") {
+    return `
+      <div style="margin-top:14px;padding:12px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:#faf7f2;">
+        <span class="mini-label">AI 자동 실행 · 승인 단계</span>
+        <p style="margin-top:4px;">이 단계는 AI가 아니라 정엘 소장님이 직접 검토·승인해야 합니다.</p>
+      </div>
+    `;
+  }
+  const running = aiRunningProjects.has(project.id);
+  const stageLabel = (stages.find((s) => s.id === project.stage) || {}).label || project.stage;
+  return `
+    <div style="margin-top:14px;padding:12px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:#faf7f2;">
+      <span class="mini-label">AI 자동 실행 · 현재 단계: ${h(stageLabel)}</span>
+      <div style="margin-top:8px;">
+        <button class="primary-button" data-run-ai="${h(project.id)}" type="button"${running ? " disabled" : ""}>
+          ${running ? "AI 작업 중… (최대 1~2분 소요)" : `AI로 "${h(stageLabel)}" 단계 실행`}
+        </button>
+      </div>
+      <p style="margin-top:8px;font-size:12px;color:#777;">Claude Opus + 웹검색으로 실제 리서치·법령확인·초안 작성을 수행하고 결과를 메모에 추가합니다 (웹검색 1,000회당 $10 + 토큰비용 발생). 결과는 반드시 사람이 검토 후 사용하세요.</p>
     </div>
   `;
 }
@@ -1890,6 +1976,12 @@ function handleDocumentClick(event) {
   const editProject = event.target.closest("[data-edit-project]");
   if (editProject) {
     openProjectDialog(editProject.dataset.editProject);
+    return;
+  }
+
+  const runAi = event.target.closest("[data-run-ai]");
+  if (runAi) {
+    runProjectAI(runAi.dataset.runAi);
     return;
   }
 
