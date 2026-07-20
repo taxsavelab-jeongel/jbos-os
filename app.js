@@ -974,6 +974,9 @@ async function fetchLiveGmail() {
         inboxTotal: payload.inboxTotal || 0,
         inboxUnread: payload.inboxUnread || 0,
         importantUnread: payload.importantUnread || 0,
+        mustReadCount: payload.mustReadCount || 0,
+        adCount: payload.adCount || 0,
+        briefing: payload.briefing || "",
         lastSynced: new Date().toISOString()
       };
       if (payload.emails && payload.emails.length) {
@@ -1208,7 +1211,7 @@ function renderDashboard() {
   els.dashboardCalendarCount.textContent = calendarNeedsSetup ? "확인 필요" : `${upcomingEvents}개`;
   els.dashboardCalendarList.innerHTML = renderEventList(upcomingCalendarItems().slice(0, 5), false);
   els.dashboardEmailCount.textContent = `${(state.emails || []).length}개`;
-  els.dashboardEmailReport.innerHTML = renderEmailList((state.emails || []).slice(0, 5));
+  els.dashboardEmailReport.innerHTML = renderEmailBriefing() + renderEmailList((state.emails || []).slice(0, 5));
   els.dashboardReminderList.innerHTML = renderReminderList();
 
   const focusItems = state.tasks
@@ -1269,7 +1272,7 @@ function renderWork() {
   els.workEventsList.innerHTML = renderEventList(state.events || [], true);
 
   els.workEmailCount.textContent = `${(state.emails || []).length}개`;
-  els.workEmailList.innerHTML = renderEmailList(state.emails || []);
+  els.workEmailList.innerHTML = renderEmailBriefing() + renderEmailList(state.emails || []);
 
   els.workFilesList.innerHTML = (state.files || []).map((file) => `
     <article class="compact-item">
@@ -1465,6 +1468,19 @@ function renderCalendarSyncCard() {
         <strong>연동 필요</strong>
       </div>
       <p>${h(message)}</p>
+    </article>
+  `;
+}
+
+function renderEmailBriefing() {
+  const gmail = state.integrations?.gmail;
+  if (!gmail?.connected || !gmail.briefing) return "";
+  const mustRead = gmail.mustReadCount || 0;
+  return `
+    <article class="compact-item" style="border-left:3px solid ${mustRead > 0 ? "#b3261e" : "#1a7f37"};background:${mustRead > 0 ? "#fdf3f2" : "#f2faf4"};">
+      <span>비서 브리핑 · Gmail 자동 분류</span>
+      <strong>${mustRead > 0 ? "🔴" : "✅"} ${h(gmail.briefing)}</strong>
+      <p>필수 메일이 목록 맨 위에 정렬되어 있습니다. 광고·홍보 메일은 자동으로 숨겼습니다.</p>
     </article>
   `;
 }
