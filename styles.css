@@ -1014,6 +1014,21 @@ a.indicator-card {
   box-shadow: var(--shadow-soft);
 }
 
+/* 콘텐츠 파이프라인: 좌우 분할 대신 프로젝트 목록 위 / 상세 메모 아래로 전체 폭 사용 */
+#pipelineGrid {
+  grid-template-columns: 1fr;
+}
+
+#pipelineGrid > .panel,
+#pipelineGrid > .detail-panel {
+  grid-column: 1 / -1;
+}
+
+#pipelineGrid .detail-panel {
+  position: static;
+  max-width: none;
+}
+
 .detail-panel h3 {
   margin: 0 0 8px;
   font-size: 20px;
@@ -1980,7 +1995,7 @@ html, body {
     font-size: 23px;
   }
 
-  /* 로그인/프로필 카드: 화면에 꽉 맞추고 스크롤 */
+  /* 로그인/프로필 카드: 화면에 꿡 맞추고 스크롤 */
   .auth-overlay {
     padding: 12px;
     align-items: flex-start;
