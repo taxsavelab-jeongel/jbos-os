@@ -1029,17 +1029,34 @@ const WEATHER_CODES = {
 
 async function fetchLiveWeather() {
   try {
-    const url = "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.978&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Asia%2FSeoul";
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.978&current=temperature_2m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=2&timezone=Asia%2FSeoul";
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const payload = await response.json();
     const cur = payload.current;
+    const daily = payload.daily;
     if (cur) {
+      const forecast = [];
+      if (daily && Array.isArray(daily.time)) {
+        const labels = ["오늘", "내일"];
+        daily.time.forEach((day, idx) => {
+          if (idx > 1) return;
+          const rainProb = daily.precipitation_probability_max?.[idx];
+          forecast.push({
+            label: labels[idx] || day,
+            condition: WEATHER_CODES[daily.weather_code?.[idx]] || "확인",
+            tempMax: Math.round(daily.temperature_2m_max?.[idx] ?? 0),
+            tempMin: Math.round(daily.temperature_2m_min?.[idx] ?? 0),
+            rainProb: typeof rainProb === "number" ? rainProb : null
+          });
+        });
+      }
       state.weather = {
         city: "서울",
         temp: `${Math.round(cur.temperature_2m)}°C`,
         condition: WEATHER_CODES[cur.weather_code] || "확인",
         humidity: `${cur.relative_humidity_2m}%`,
+        forecast,
         note: `Open-Meteo 실시간 · ${String(cur.time || "").replace("T", " ")} 기준`
       };
       weatherAsOf = cur.time || "";
@@ -1381,11 +1398,22 @@ function renderNewsCards(items, withAction = false) {
 }
 
 function renderWeatherCard(weather) {
+  const forecastRows = (weather.forecast || []).map((day) => {
+    const rain = day.rainProb === null || day.rainProb === undefined ? "" : `☔ 비 올 확률 ${day.rainProb}%`;
+    const rainStrong = (day.rainProb || 0) >= 50;
+    return `
+      <p style="margin:2px 0;">
+        <strong style="font-size:0.95em;">${h(day.label)}</strong> · ${h(day.condition)} · ${h(String(day.tempMin))}~${h(String(day.tempMax))}°C
+        ${rain ? `· <span style="${rainStrong ? "color:#b3261e;font-weight:700;" : ""}">${h(rain)}</span>` : ""}
+      </p>
+    `;
+  }).join("");
   return `
     <article class="weather-card">
       <span class="mini-label">${h(weather.city)}</span>
       <strong>${h(weather.temp)}</strong>
-      <p>${h(weather.condition)} · 습도 ${h(weather.humidity)}</p>
+      <p>지금 · ${h(weather.condition)} · 습도 ${h(weather.humidity)}</p>
+      ${forecastRows}
       <p>${h(weather.note || "")}</p>
     </article>
   `;
