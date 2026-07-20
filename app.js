@@ -392,6 +392,7 @@ const defaultState = {
     search: "",
     workFocus: "",
     taskFilter: "",
+    watchlist: [],
     moduleVisibility: {
       news: true,
       economy: true,
@@ -442,6 +443,8 @@ function cacheElements() {
     "connectionStatus",
     "globalSearch",
     "metricGrid",
+    "watchlistInput",
+    "watchlistAddBtn",
     "dashboardNewsList",
     "dashboardWeatherBox",
     "dashboardEconomyList",
@@ -547,6 +550,17 @@ function initializeControls() {
   els.generatePromptBtn.addEventListener("click", generatePrompt);
   els.copyPromptBtn.addEventListener("click", () => copyText(els.promptOutput.value, "프롬프트를 복사했습니다."));
   els.copyReadOrderBtn.addEventListener("click", copyReadOrder);
+  if (els.watchlistAddBtn) {
+    els.watchlistAddBtn.addEventListener("click", addWatchlistStock);
+  }
+  if (els.watchlistInput) {
+    els.watchlistInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        addWatchlistStock();
+      }
+    });
+  }
 
   els.exportBtn.addEventListener("click", exportState);
   els.importBtn.addEventListener("click", () => els.importFile.click());
@@ -997,7 +1011,11 @@ async function fetchLiveGmail() {
 
 async function fetchLiveMarket() {
   try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/market`, {
+    const watchlist = Array.isArray(state.ui?.watchlist) ? state.ui.watchlist : [];
+    const symbolsParam = watchlist.length
+      ? `?symbols=${encodeURIComponent(watchlist.map((s) => `${s.symbol}:${s.name}`).join(","))}`
+      : "";
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/market${symbolsParam}`, {
       headers: {
         apikey: SUPABASE_ANON_KEY,
         Authorization: `Bearer ${SUPABASE_ANON_KEY}`
@@ -1013,6 +1031,46 @@ async function fetchLiveMarket() {
     }
   } catch (error) {
     console.warn("market fetch failed", error);
+  }
+}
+
+async function addWatchlistStock() {
+  const query = (els.watchlistInput?.value || "").trim();
+  if (!query) {
+    showToast("추가할 종목명을 입력하세요. (예: 비츠로셀)");
+    return;
+  }
+  try {
+    showToast(`"${query}" 종목 검색 중...`);
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/market?search=${encodeURIComponent(query)}`, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    const payload = await response.json();
+    const found = (payload.results || [])[0];
+    if (!found) {
+      showToast(`"${query}" 종목을 찾지 못했습니다. 정확한 종목명으로 다시 시도해주세요.`);
+      return;
+    }
+    state.ui.watchlist = Array.isArray(state.ui.watchlist) ? state.ui.watchlist : [];
+    if (state.ui.watchlist.some((s) => s.symbol === found.symbol)) {
+      showToast(`${found.name}은(는) 이미 관심 종목에 있습니다.`);
+      return;
+    }
+    if (state.ui.watchlist.length >= 10) {
+      showToast("관심 종목은 최대 10개까지 등록할 수 있습니다.");
+      return;
+    }
+    state.ui.watchlist.push({ symbol: found.symbol, name: found.name });
+    if (els.watchlistInput) els.watchlistInput.value = "";
+    saveState();
+    showToast(`${found.name} (${found.exchange}) 종목을 추가했습니다.`);
+    fetchLiveMarket();
+  } catch (error) {
+    console.warn("watchlist add failed", error);
+    showToast("종목 추가에 실패했습니다. 잠시 후 다시 시도해주세요.");
   }
 }
 
@@ -1480,6 +1538,7 @@ function renderStockCards(items) {
       <p class="stock-price">${h(item.value)}</p>
       <em class="${trendClass}">${h(item.change)}</em>
       <small>${h(item.source || "")}</small>
+      ${item.watch ? `<button class="mini-action" data-remove-stock="${h(item.symbol)}" type="button" style="margin-top:4px;">관심 해제</button>` : ""}
     `;
     return item.url
       ? `<a class="indicator-card stock-card" href="${h(item.url)}" target="_blank" rel="noreferrer">${body}</a>`
@@ -1882,6 +1941,16 @@ function handleDocumentClick(event) {
       renderWork();
       showToast("뉴스 소재를 할 일로 보냈습니다.");
     }
+    return;
+  }
+
+  const removeStock = event.target.closest("[data-remove-stock]");
+  if (removeStock) {
+    event.preventDefault();
+    state.ui.watchlist = (state.ui.watchlist || []).filter((s) => s.symbol !== removeStock.dataset.removeStock);
+    saveState();
+    fetchLiveMarket();
+    showToast("관심 종목에서 제거했습니다.");
     return;
   }
 
