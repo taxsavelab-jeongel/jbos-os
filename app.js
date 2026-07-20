@@ -1399,13 +1399,18 @@ function renderNewsCards(items, withAction = false) {
 
 function renderWeatherCard(weather) {
   const forecastRows = (weather.forecast || []).map((day) => {
-    const rain = day.rainProb === null || day.rainProb === undefined ? "" : `☔ 비 올 확률 ${day.rainProb}%`;
-    const rainStrong = (day.rainProb || 0) >= 50;
+    const hasRainProb = day.rainProb !== null && day.rainProb !== undefined;
+    const rainStrong = hasRainProb && day.rainProb >= 50;
+    // 비 올 확률이 있으면 확률만 보여주고(중복 방지), 없을 때만 날씨 상태 텍스트 표시
+    const rightSide = hasRainProb
+      ? `<span style="font-weight:700;color:${rainStrong ? "#b3261e" : "#1a6ee0"};white-space:nowrap;">☔ ${h(String(day.rainProb))}%</span>`
+      : `<span style="color:#666;white-space:nowrap;">${h(day.condition)}</span>`;
     return `
-      <p style="margin:2px 0;">
-        <strong style="font-size:0.95em;">${h(day.label)}</strong> · ${h(day.condition)} · ${h(String(day.tempMin))}~${h(String(day.tempMax))}°C
-        ${rain ? `· <span style="${rainStrong ? "color:#b3261e;font-weight:700;" : ""}">${h(rain)}</span>` : ""}
-      </p>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 2px;border-top:1px solid rgba(0,0,0,0.07);">
+        <strong style="min-width:36px;">${h(day.label)}</strong>
+        <span style="color:#444;">${h(String(day.tempMin))}~${h(String(day.tempMax))}°C</span>
+        ${rightSide}
+      </div>
     `;
   }).join("");
   return `
@@ -1413,8 +1418,8 @@ function renderWeatherCard(weather) {
       <span class="mini-label">${h(weather.city)}</span>
       <strong>${h(weather.temp)}</strong>
       <p>지금 · ${h(weather.condition)} · 습도 ${h(weather.humidity)}</p>
-      ${forecastRows}
-      <p>${h(weather.note || "")}</p>
+      <div style="margin-top:8px;">${forecastRows}</div>
+      <p style="margin-top:6px;">${h(weather.note || "")}</p>
     </article>
   `;
 }
