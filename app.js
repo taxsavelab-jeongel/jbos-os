@@ -895,6 +895,7 @@ async function loadCloudState() {
 async function refreshLiveData() {
   fetchLiveMarket();
   fetchLiveWeather();
+  fetchLiveNews();
   if (currentUser) {
     fetchLiveCalendar();
     fetchLiveGmail();
@@ -1012,6 +1013,25 @@ async function fetchLiveMarket() {
     }
   } catch (error) {
     console.warn("market fetch failed", error);
+  }
+}
+
+async function fetchLiveNews() {
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/news-feed`, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    if (Array.isArray(payload.items) && payload.items.length) {
+      state.news = payload.items;
+      renderCurrentView();
+    }
+  } catch (error) {
+    console.warn("news fetch failed", error);
   }
 }
 
@@ -1222,7 +1242,7 @@ function renderDashboard() {
     metric("J-BOS 문서", vaultDocs.length, "운영 기준 문서", "vault")
   ].join("");
 
-  els.dashboardNewsList.innerHTML = renderNewsCards((state.news || []).slice(0, 4));
+  els.dashboardNewsList.innerHTML = renderNewsCards((state.news || []).slice(0, 6));
   els.dashboardWeatherBox.innerHTML = renderWeatherCard(state.weather || workDefaults.weather);
   els.dashboardEconomyList.innerHTML = renderEconomySnapshot(economyItems.slice(0, 6), stockItems.slice(0, 5));
   els.dashboardCalendarCount.textContent = calendarNeedsSetup ? "확인 필요" : `${upcomingEvents}개`;
@@ -1391,8 +1411,11 @@ function renderNewsCards(items, withAction = false) {
     <article class="news-card-lite">
       <span>${h(item.tag)} · ${h(item.source)} · ${h(item.time)}</span>
       <strong>${h(item.title)}</strong>
-      <p>${h(item.summary)}</p>
-      ${withAction ? `<button class="mini-action" data-news-task="${index}" type="button">할 일로 보내기</button>` : ""}
+      ${item.summary ? `<p>${h(item.summary)}</p>` : ""}
+      <div style="display:flex;gap:10px;align-items:center;">
+        ${item.url ? `<a class="mini-link" href="${h(item.url)}" target="_blank" rel="noreferrer">기사 읽기 →</a>` : ""}
+        ${withAction ? `<button class="mini-action" data-news-task="${index}" type="button">할 일로 보내기</button>` : ""}
+      </div>
     </article>
   `).join("") || empty("뉴스 소재가 없습니다.");
 }
