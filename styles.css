@@ -1995,7 +1995,7 @@ html, body {
     font-size: 23px;
   }
 
-  /* 로그인/프로필 카드: 화면에 꿡 맞추고 스크롤 */
+  /* 로그인/프로필 카드: 화면에 꽉 맞추고 스크롤 */
   .auth-overlay {
     padding: 12px;
     align-items: flex-start;
