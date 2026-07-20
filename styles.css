@@ -582,11 +582,11 @@ a.indicator-card {
 }
 
 .indicator-card .up {
-  color: #07845e;
+  color: var(--accent);
 }
 
 .indicator-card .down {
-  color: var(--accent);
+  color: #1a6ee0;
 }
 
 .weather-card {
