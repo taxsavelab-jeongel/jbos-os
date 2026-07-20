@@ -1300,7 +1300,7 @@ function renderDashboard() {
     metric("J-BOS 문서", vaultDocs.length, "운영 기준 문서", "vault")
   ].join("");
 
-  els.dashboardNewsList.innerHTML = renderNewsCards((state.news || []).slice(0, 6));
+  els.dashboardNewsList.innerHTML = renderNewsCards((state.news || []).slice(0, 6), true);
   els.dashboardWeatherBox.innerHTML = renderWeatherCard(state.weather || workDefaults.weather);
   els.dashboardEconomyList.innerHTML = renderEconomySnapshot(economyItems.slice(0, 6), stockItems.slice(0, 5));
   els.dashboardCalendarCount.textContent = calendarNeedsSetup ? "확인 필요" : `${upcomingEvents}개`;
