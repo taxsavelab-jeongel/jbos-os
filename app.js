@@ -8,6 +8,8 @@ let sb = null;
 let currentUser = null;
 let cloudSaveTimer = null;
 let cloudReady = false;
+let liveGmailSyncedAt = 0;
+let liveCalendarSyncedAt = 0;
 let marketAsOf = "";
 let weatherAsOf = "";
 const aiRunningProjects = new Set();
@@ -892,7 +894,20 @@ async function loadCloudState() {
     if (error) throw error;
 
     if (data?.state && (Array.isArray(data.state.projects) || Array.isArray(data.state.tasks))) {
-      state = normalizeState(data.state);
+      const cloudState = normalizeState(data.state);
+      // 이미 이 세션에서 구글 실연동으로 받아온 최신 메일·일정이 있으면
+      // 클라우드의 옛 복사본으로 덮어쓰지 않는다 (경합 방지).
+      if (liveGmailSyncedAt) {
+        cloudState.emails = state.emails;
+        cloudState.integrations = cloudState.integrations || {};
+        if (state.integrations?.gmail) cloudState.integrations.gmail = state.integrations.gmail;
+      }
+      if (liveCalendarSyncedAt) {
+        cloudState.events = state.events;
+        cloudState.integrations = cloudState.integrations || {};
+        if (state.integrations?.calendar) cloudState.integrations.calendar = state.integrations.calendar;
+      }
+      state = cloudState;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       render();
       showToast("클라우드 데이터를 불러왔습니다.");
@@ -962,6 +977,8 @@ async function fetchLiveCalendar() {
         lastSynced: new Date().toISOString()
       };
       state.events = payload.events || [];
+      liveCalendarSyncedAt = Date.now();
+      saveState(); // 최신 일정을 클라우드에도 저장 → 다른 기기 동기화
       renderCurrentView();
     } else {
       state.integrations.calendar = {
@@ -998,6 +1015,8 @@ async function fetchLiveGmail() {
       if (payload.emails && payload.emails.length) {
         state.emails = payload.emails;
       }
+      liveGmailSyncedAt = Date.now();
+      saveState(); // 최신 메일 목록을 클라우드에도 저장 → 다른 기기 동기화
       renderCurrentView();
     } else {
       state.integrations.gmail = {
