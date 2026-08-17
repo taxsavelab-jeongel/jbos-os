@@ -4,6 +4,9 @@
 (function () {
   'use strict';
 
+  /* 정엘 고정값: 모든 상담 신청 동선은 이 주소 하나로 통일한다. */
+  var LP_URL = 'https://lp.jeongellab.com';
+
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
@@ -227,7 +230,7 @@
 
     if (res.cta) {
       html += '<div class="result-cta"><p>' + esc(res.cta) + '</p>' +
-        '<a href="#contact">상담 신청하기</a></div>';
+        '<a href="' + LP_URL + '">상담 신청하기</a></div>';
     }
 
     out.innerHTML = html;
@@ -236,121 +239,6 @@
   if (CALCS.length && tabsEl && panelEl) {
     buildTabs();
     selectTab(0);
-  }
-
-  /* ═══════════════ 상담 신청 폼 → 리드 자동화 ═══════════════
-     구글폼 formResponse 엔드포인트로 전송한다.
-     → 마스터DB "홈페이지 상담신청" 탭에 행 추가
-     → 공용 Apps Script의 onFormSubmit 트리거가 텔레그램 알림 + 원본백업
-     → 캠페인 Apps Script가 신청자에게 확인 메일 발송
-
-     아래 LEAD_CONFIG 값은 integration/apps-script-campaign.gs 의
-     setupConsultForm() 을 한 번 실행하면 실행 로그에 그대로 출력된다.
-     값이 비어 있으면 자동으로 메일 작성 창 방식으로 대체 동작한다.
-     ═══════════════════════════════════════════════════════ */
-  var LEAD_CONFIG = {
-    action: '',            // 예: https://docs.google.com/forms/d/e/1FAIpQL.../formResponse
-    fields: {
-      name: '',            // 성함
-      phone: '',           // 연락처
-      email: '',           // 이메일
-      company: '',         // 회사명
-      topic: '',           // 가장 급한 고민
-      memo: '',            // 남기실 말씀
-      consent: ''          // 개인정보 수집·이용 동의
-    },
-    consentValue: '동의합니다'
-  };
-
-  var form = $('#leadForm');
-  if (form) {
-    var note = $('#formNote');
-    var submitBtn = $('#leadSubmit');
-    var done = $('#formDone');
-    var sending = false;
-
-    var wired = !!(LEAD_CONFIG.action && LEAD_CONFIG.fields.name && LEAD_CONFIG.fields.phone);
-
-    function fail(msg) {
-      note.className = 'form-note err';
-      note.textContent = msg;
-    }
-
-    function showDone() {
-      form.hidden = true;
-      var lead = $('.contact-card-lead');
-      if (lead) lead.hidden = true;
-      done.hidden = false;
-      done.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (sending) return;
-
-      var data = new FormData(form);
-      var val = function (k) { return (data.get(k) || '').toString().trim(); };
-
-      if (val('website')) return;            // 봇 차단 (허니팟)
-
-      var name = val('name'), phone = val('phone'), email = val('email'), company = val('company');
-
-      if (!name || !phone || !email || !company) {
-        return fail('성함 · 연락처 · 이메일 · 회사명은 반드시 입력해 주십시오.');
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return fail('이메일 주소를 다시 확인해 주십시오.');
-      }
-      if (!/[0-9]{9,}/.test(phone.replace(/[^0-9]/g, ''))) {
-        return fail('연락처를 숫자 9자리 이상으로 입력해 주십시오.');
-      }
-      if (!data.get('consent')) {
-        return fail('개인정보 수집·이용에 동의해 주셔야 신청이 접수됩니다.');
-      }
-
-      /* 연동 전에는 메일 작성 창으로 대체 */
-      if (!wired) {
-        note.className = 'form-note';
-        note.textContent = '메일 작성 창을 엽니다. 전송해 주시면 24시간 이내에 연락드리겠습니다.';
-        var body = [
-          '성함: ' + name, '연락처: ' + phone, '이메일: ' + email, '회사명: ' + company,
-          '상담 주제: ' + val('topic'), '', val('memo')
-        ].join('\n');
-        window.location.href = 'mailto:taxsavelab@gmail.com'
-          + '?subject=' + encodeURIComponent('[상담신청] ' + company + ' ' + name + ' 대표님')
-          + '&body=' + encodeURIComponent(body);
-        return;
-      }
-
-      sending = true;
-      submitBtn.disabled = true;
-      submitBtn.textContent = '전송 중입니다…';
-      note.className = 'form-note';
-      note.textContent = '';
-
-      var f = LEAD_CONFIG.fields;
-      var payload = new URLSearchParams();
-      payload.append(f.name, name);
-      payload.append(f.phone, phone);
-      payload.append(f.email, email);
-      payload.append(f.company, company);
-      if (f.topic) payload.append(f.topic, val('topic'));
-      if (f.memo && val('memo')) payload.append(f.memo, val('memo'));
-      if (f.consent) payload.append(f.consent, LEAD_CONFIG.consentValue);
-
-      /* 구글폼은 CORS 응답을 주지 않으므로 no-cors 로 보내고 완료로 간주한다. */
-      fetch(LEAD_CONFIG.action, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-        body: payload.toString()
-      }).then(showDone).catch(function () {
-        sending = false;
-        submitBtn.disabled = false;
-        submitBtn.textContent = '상담 신청서 보내기';
-        fail('전송에 실패했습니다. 010-5500-9632 로 연락 주시면 바로 도와드리겠습니다.');
-      });
-    });
   }
 
   /* ── 연도 ─────────────────────────────────────────────── */
