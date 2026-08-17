@@ -879,3 +879,11 @@ h1, h2, h3, h4 { font-weight: 800; letter-spacing: -.035em; }
   border-left: 3px solid var(--accent); font-size: 16px; color: var(--muted); line-height: 1.85;
 }
 .clients-note b { color: var(--brand); font-weight: 700; }
+
+
+/* ── 로고 마크: 정엘 L 브래킷 (세로형) ── */
+.logo-mark { width: auto; height: 30px; flex: none; }
+.footer-brand .logo-mark { height: 38px; }
+.logo { gap: 14px; align-items: center; }
+
+.hero-lead b { color: var(--brand); font-weight: 700; }

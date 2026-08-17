@@ -19,10 +19,8 @@ const TODAY = '2026-08-17';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-const MARK = `<svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-        <rect width="40" height="40" rx="3" fill="currentColor"/>
-        <path d="M11 11h18M20 11v18M11 29h18" stroke="#C0111F" stroke-width="2.1" stroke-linecap="square" fill="none"/>
-        <circle cx="20" cy="20" r="3.1" fill="#C0111F"/>
+const MARK = `<svg class="logo-mark" viewBox="0 0 78 100" aria-hidden="true">
+        <path d="M26 0 L26 72 L78 72 L78 90 L68 100 L0 100 L0 18 Z" fill="#C0111F"/>
       </svg>`;
 
 function header(base) {
@@ -54,10 +52,8 @@ function footer(base) {
   return `<footer class="site-footer">
   <div class="shell footer-inner">
     <div class="footer-brand">
-      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-        <rect width="40" height="40" rx="3" fill="#C0111F"/>
-        <path d="M11 11h18M20 11v18M11 29h18" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="square" fill="none"/>
-        <circle cx="20" cy="20" r="3.1" fill="#FFFFFF"/>
+      <svg class="logo-mark" viewBox="0 0 78 100" aria-hidden="true">
+        <path d="M26 0 L26 72 L78 72 L78 90 L68 100 L0 100 L0 18 Z" fill="#C0111F"/>
       </svg>
       <p class="footer-claim">법인전환부터 M&amp;A까지,<br>기업의 모든 구간을 함께합니다.</p>
     </div>
