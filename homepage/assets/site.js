@@ -21,13 +21,20 @@
   var alwaysSolid = true;   /* 전 페이지가 밝은 배경이므로 헤더는 항상 solid */
   if (alwaysSolid) header.classList.add('solid');
 
+  var ticking = false;
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;
     if (!alwaysSolid) header.classList.toggle('solid', y > 40);
     if (floatCta) floatCta.classList.toggle('show', y > 620);
+    updateProgress();
+    updateSpy();
   }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { onScroll(); ticking = false; });
+  }, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
 
   toggle.addEventListener('click', function () {
     var open = nav.classList.toggle('open');
@@ -42,18 +49,55 @@
     });
   });
 
-  /* ── 스크롤 등장 효과 ─────────────────────────────────── */
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── 스크롤 진행바 ────────────────────────────────────── */
+  var progress = $('#scrollProgress');
+  function updateProgress() {
+    if (!progress) return;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var y = window.scrollY || window.pageYOffset;
+    progress.style.width = (h > 0 ? Math.min(100, (y / h) * 100) : 0) + '%';
+  }
+
+  /* ── 스크롤 등장 효과 (형제 요소는 순차로) ──────────────── */
   var reveals = $$('.reveal');
-  if ('IntersectionObserver' in window) {
+  if ('IntersectionObserver' in window && !reduceMotion) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        /* 같은 부모 안에서 몇 번째인지에 따라 지연을 줘 카드가 하나씩 올라오게 한다 */
+        var sibs = Array.prototype.filter.call(el.parentNode.children, function (n) {
+          return n.classList && n.classList.contains('reveal');
+        });
+        var i = sibs.indexOf(el);
+        el.style.transitionDelay = (i > 0 ? Math.min(i, 6) * 70 : 0) + 'ms';
+        el.classList.add('in');
+        io.unobserve(el);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
     reveals.forEach(function (el) { io.observe(el); });
   } else {
     reveals.forEach(function (el) { el.classList.add('in'); });
   }
+
+  /* ── 내비게이션 현재 위치 표시 (스크롤스파이) ─────────── */
+  var spyLinks = $$('#nav a[href*="#"]').filter(function (a) {
+    return a.getAttribute('href').indexOf('#') === 0;
+  });
+  var spyTargets = spyLinks.map(function (a) {
+    return document.querySelector(a.getAttribute('href'));
+  });
+  function updateSpy() {
+    if (!spyLinks.length) return;
+    var y = (window.scrollY || window.pageYOffset) + 140;
+    var current = -1;
+    spyTargets.forEach(function (t, i) { if (t && t.offsetTop <= y) current = i; });
+    spyLinks.forEach(function (a, i) { a.classList.toggle('active', i === current); });
+  }
+
+  onScroll();
 
   /* ── 지표 카운트업 ────────────────────────────────────── */
   var counters = $$('[data-count]');
