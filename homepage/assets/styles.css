@@ -505,3 +505,25 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .contact-list li { flex-direction: column; gap: 4px; }
   .contact-list span { flex: none; }
 }
+
+/* ─────────── 정적 도구 목록 (크롤러·AI 검색용 · 사용자에게도 색인 역할) ─────────── */
+.tools-index { margin-top: 40px; padding: 34px 36px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14); }
+.tools-index h3 { font-size: 19px; color: #fff; margin-bottom: 22px; }
+.tools-index ol { counter-reset: ti; display: grid; gap: 18px; }
+.tools-index li { counter-increment: ti; position: relative; padding-left: 40px; }
+.tools-index li::before {
+  content: counter(ti, decimal-leading-zero); position: absolute; left: 0; top: 2px;
+  font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--hi); letter-spacing: .05em;
+}
+.tools-index b { display: block; font-size: 15.5px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.tools-index span { display: block; font-size: 14px; color: rgba(255,255,255,.68); line-height: 1.8; }
+.tools-index em {
+  display: block; font-style: normal; font-size: 12px; color: var(--hi);
+  margin-top: 5px; letter-spacing: .01em;
+}
+@media (max-width: 900px) {
+  .tools-index { padding: 26px 22px; }
+  .tools-index li { padding-left: 32px; }
+}
+
+.site-footer address { font-style: normal; }

@@ -89,6 +89,52 @@ Google Drive `01.정엘그룹 운영팀 / 00_그룹공통 / 02_브랜드` 자료
 `node` 환경에서 세율표 검산 및 7개 계산기 전수 엣지케이스 테스트를 통과했습니다.
 (증여 과표 10억 → 2.4억, 30억 → 10.4억, 50억 → 20.4억 등 법정 세액과 일치)
 
+## SEO — 검색 노출
+
+목표는 **네이버 · 구글 · AI 검색(ChatGPT·Perplexity·구글 AI 개요)** 세 곳 모두입니다.
+
+### 적용한 것
+
+| 항목 | 내용 |
+|---|---|
+| 메타 | title(키워드 선행형)·description·canonical·robots(max-snippet 무제한)·author |
+| 소셜 | og:* 전체 + twitter card + **1200×630 OG 이미지**(`assets/og-image.png`) |
+| 구조화 데이터 | JSON-LD `@graph` — ProfessionalService/Organization, WebSite, WebPage, ItemList(도구 7종), FAQPage(5문항) |
+| 크롤링 | `robots.txt` · `sitemap.xml` · `llms.txt` |
+| 국내 검색 | 네이버 `Yeti`, 다음 `Daumoa` 명시적 허용 |
+| AI 검색 | GPTBot·OAI-SearchBot·ClaudeBot·PerplexityBot·Google-Extended·Applebot-Extended **명시적 허용** |
+| 시맨틱 | h1 1개 / h2 7개 / h3 14개 계층, 푸터 `<address>`, `lang="ko"` |
+
+### 핵심 수정: 계산기 콘텐츠를 크롤러가 볼 수 있게 만든 것
+
+계산기 UI는 `calculators.js`가 런타임에 생성하므로 **HTML 소스에는 존재하지 않았습니다.**
+`승계세액 비교 시뮬레이터`, `가지급금 손실 진단기` 등 도구 7종 중 4종의 이름과
+근거 법령이 통째로 검색엔진에 안 보이는 상태였습니다.
+
+→ `.tools-index` 블록을 정적 HTML로 추가했습니다. 도구 7종의 이름·설명·근거 법령이
+본문에 그대로 들어가며, 사용자에게도 색인 역할을 합니다.
+정적 본문 글자수 **4,120자 → 5,030자**, 도구 키워드 **3/9 → 9/9** 노출.
+
+### 배포 후 반드시 할 일
+
+1. **네이버 서치어드바이저** (searchadvisor.naver.com) — 사이트 등록 → 소유확인 메타태그를
+   `index.html` 14행 주석에 넣고 주석 해제 → 사이트맵 제출 → 웹페이지 수집 요청
+2. **구글 서치콘솔** (search.google.com/search-console) — 동일하게 소유확인 후 사이트맵 제출
+3. **다음 검색등록** (register.search.daum.net)
+4. 도메인이 `jeongel.co.kr`이 아니라면 아래 한 줄로 일괄 교체:
+   ```bash
+   grep -rl 'jeongel.co.kr' homepage/ | xargs sed -i 's|https://jeongel.co.kr|https://실제도메인|g'
+   ```
+
+### 다음 단계 (효과가 가장 큰 순서)
+
+1. **계산기를 개별 URL로 분리** — 현재는 1페이지 사이트라 색인될 URL이 하나뿐입니다.
+   `/tools/가업승계-증여세-계산기` 처럼 7개 페이지로 나누면 "가업승계 증여세 계산기",
+   "비상장주식 평가 방법" 같은 롱테일 키워드를 각각 노려볼 수 있습니다. **효과가 가장 큽니다.**
+2. **인사이트 아티클** — 세법 개정, 판례, 사례를 정기 발행. 네이버는 갱신 빈도를 크게 봅니다.
+3. **유튜브 채널 연결** — JSON-LD `sameAs`에 채널 URL 추가 (현재 미보유로 생략).
+4. **웹폰트 자체 호스팅** — Google Fonts 외부 요청이 LCP를 늦춥니다. Core Web Vitals 개선용.
+
 ## 배포
 
 정적 파일이므로 `homepage/` 폴더 내용을 그대로 올리면 됩니다.
