@@ -886,3 +886,147 @@ h1, h2, h3, h4 { font-weight: 800; letter-spacing: -.035em; }
 .logo { gap: 14px; align-items: center; }
 
 .hero-lead b { color: var(--brand); font-weight: 700; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   모션 레이어 — 배경 움직임
+   세무·자문 브랜드라 "설계도가 살아 움직이는" 정도로 절제한다.
+   전부 transform/opacity 만 애니메이션해 GPU 합성에 맡기고,
+   레이아웃·페인트를 유발하는 속성은 쓰지 않는다.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── 1. 청사진 그리드 흐름 ──
+   타일 한 칸(72px)만큼 대각선으로 밀고 되돌린다. 이동량이 타일 크기와
+   같아야 이음매가 보이지 않는다. 그리드는 ::after 가 이미 그리고 있으므로
+   여기서는 위치만 움직인다. */
+.hero-bg::after {
+  will-change: transform;
+  animation: gridDrift 42s linear infinite;
+}
+@keyframes gridDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(72px, 72px, 0); }
+}
+/* 밀려난 만큼 여백이 생기지 않도록 한 칸씩 키워 둔다.
+   선이 너무 옅으면 흐르는 것 자체가 안 보이므로 살짝 올린다. */
+.hero-bg::after {
+  inset: -72px -72px 0 0;
+  opacity: 1;
+  background-image:
+    linear-gradient(rgba(56,21,19,.040) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,21,19,.040) 1px, transparent 1px);
+}
+
+/* ── 2. 오라 — 아주 느리게 떠다니는 광원 두 개 ── */
+.hero-orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  filter: blur(60px); will-change: transform;
+}
+.orb-a {
+  width: 620px; height: 620px; top: -220px; right: -120px;
+  background: radial-gradient(circle, rgba(192,17,31,.085), transparent 68%);
+  animation: orbA 30s ease-in-out infinite;
+}
+.orb-b {
+  width: 540px; height: 540px; bottom: -240px; left: -100px;
+  background: radial-gradient(circle, rgba(152,190,196,.30), transparent 68%);
+  animation: orbB 38s ease-in-out infinite;
+}
+@keyframes orbA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-70px, 46px, 0) scale(1.12); }
+}
+@keyframes orbB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(80px, -54px, 0) scale(1.1); }
+}
+
+/* ── 3. 빛줄기 — 대각선으로 한 번씩 지나간다 ──
+   히어로가 화이트 베이스이므로 흰 빛은 보이지 않는다. 브랜드 팔레트의
+   세이지 톤을 옅게 깔아 "표면을 훑고 지나가는 빛"으로 읽히게 한다. */
+.hero-beam {
+  position: absolute; top: -60%; left: -35%; width: 26%; height: 220%;
+  background: linear-gradient(90deg,
+    transparent, rgba(152,190,196,.16), rgba(152,190,196,.26), rgba(152,190,196,.16), transparent);
+  transform: rotate(14deg) translate3d(0, 0, 0);
+  will-change: transform; pointer-events: none;
+  animation: beam 13s ease-in-out infinite;
+}
+@keyframes beam {
+  0%, 62%  { transform: rotate(14deg) translate3d(-40vw, 0, 0); opacity: 0; }
+  70%      { opacity: 1; }
+  100%     { transform: rotate(14deg) translate3d(210vw, 0, 0); opacity: 0; }
+}
+
+/* ── 4. 스크롤 패럴랙스 —
+   site.js 가 --hero-shift(px)와 --hero-fade(0~1)를 갱신한다.
+   배경은 느리게 따라오고, 본문은 스크롤과 함께 옅어진다. */
+.hero-bg { transform: translate3d(0, var(--hero-shift, 0px), 0); will-change: transform; }
+.hero-inner { opacity: var(--hero-fade, 1); }
+
+/* ── 5. 섹션 머리말 밑줄 그리기 ── */
+.section-head .kicker { position: relative; display: inline-block; }
+.section-head .kicker::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 2px;
+  background: currentColor; opacity: .32;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .9s cubic-bezier(.22,.61,.36,1) .15s;
+}
+.section-head.in .kicker::after,
+.reveal.in .kicker::after { transform: scaleX(1); }
+
+/* ── 6. 카드 안쪽에서 올라오는 강조선 ── */
+.goal, .service, .client { position: relative; }
+.goal::after, .service::after, .client::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+  transition: transform .42s cubic-bezier(.22,.61,.36,1);
+}
+.goal:hover::after, .service:hover::after, .client:hover::after { transform: scaleX(1); }
+
+/* ── 7. 계산기 탭 — 선택 표시가 미끄러지듯 ── */
+.calc-tab { position: relative; transition: background .24s ease, color .24s ease; }
+.calc-tab::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--accent); transform: scaleY(0); transform-origin: center;
+  transition: transform .3s cubic-bezier(.22,.61,.36,1);
+}
+.calc-tab[aria-selected="true"]::before { transform: scaleY(1); }
+
+/* ── 8. 지표 숫자 — 세는 동안 살짝 떠오른다 ── */
+.metric b { display: inline-block; transition: transform .5s cubic-bezier(.22,.61,.36,1); }
+.metrics-inner.in .metric b { transform: translateY(0); }
+
+/* ── 접근성: 움직임 최소화 설정을 켠 사용자에게는 전부 정지 ── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg::after, .hero-orb, .hero-beam { animation: none !important; }
+  .hero-beam { display: none; }
+  .hero-bg { transform: none !important; }
+  .hero-inner { opacity: 1 !important; }
+  .section-head .kicker::after { transform: scaleX(1); transition: none; }
+}
+
+/* ── 9. CONTACT 배경 —
+   전환이 일어나는 구간이라 히어로와 같은 결로 살짝 움직여 준다.
+   마크업을 건드리지 않도록 가상요소로만 처리한다. */
+.contact { position: relative; overflow: hidden; }
+.contact > * { position: relative; z-index: 1; }
+.contact::before {
+  content: ""; position: absolute; inset: -72px -72px 0 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(56,21,19,.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,21,19,.032) 1px, transparent 1px);
+  background-size: 72px 72px;
+  will-change: transform;
+  animation: gridDrift 42s linear infinite;
+}
+.contact::after {
+  content: ""; position: absolute; z-index: 0; pointer-events: none;
+  width: 560px; height: 560px; top: -200px; right: -140px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(192,17,31,.07), transparent 68%);
+  filter: blur(60px); will-change: transform;
+  animation: orbA 34s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact::before, .contact::after { animation: none !important; }
+}

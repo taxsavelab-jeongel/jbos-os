@@ -21,6 +21,10 @@
   var alwaysSolid = true;   /* 전 페이지가 밝은 배경이므로 헤더는 항상 solid */
   if (alwaysSolid) header.classList.add('solid');
 
+  /* onScroll 이 참조하므로 반드시 그 앞에서 정해져야 한다.
+     var 는 호이스팅되어 선언이 뒤에 있으면 첫 호출 때 undefined 가 된다. */
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   var ticking = false;
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;
@@ -28,6 +32,21 @@
     if (floatCta) floatCta.classList.toggle('show', y > 620);
     updateProgress();
     updateSpy();
+    updateHero(y);
+  }
+
+  /* ── 히어로 패럴랙스 ──────────────────────────────────────
+     배경은 스크롤의 28% 속도로 따라오고(깊이감), 본문은 히어로를
+     절반쯤 지날 때까지 서서히 옅어진다. CSS 변수로만 넘기고 실제
+     합성은 GPU 에 맡긴다. 히어로를 벗어나면 계산을 건너뛴다. */
+  var hero = $('.hero');
+  function updateHero(y) {
+    if (!hero || reduceMotion) return;
+    var h = hero.offsetHeight;
+    if (y > h) return;
+    var t = h > 0 ? y / h : 0;
+    hero.style.setProperty('--hero-shift', (y * 0.28).toFixed(1) + 'px');
+    hero.style.setProperty('--hero-fade', Math.max(0, 1 - t * 1.35).toFixed(3));
   }
   window.addEventListener('scroll', function () {
     if (ticking) return;
@@ -48,8 +67,6 @@
       toggle.setAttribute('aria-expanded', 'false');
     });
   });
-
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── 스크롤 진행바 ────────────────────────────────────── */
   var progress = $('#scrollProgress');
@@ -80,6 +97,24 @@
     reveals.forEach(function (el) { io.observe(el); });
   } else {
     reveals.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ── 섹션 머리말 밑줄 그리기 ───────────────────────────
+     .section-head 에는 .reveal 이 붙어 있지 않다. .reveal 을 얹으면
+     JS 가 도는 순간 opacity 0 이 적용돼 깜빡이므로, 여기서는 .in 만
+     따로 달아 준다. CSS 의 .section-head.in .kicker::after 가 받는다. */
+  var heads = $$('.section-head');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var hio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        hio.unobserve(e.target);
+      });
+    }, { threshold: 0.25 });
+    heads.forEach(function (el) { hio.observe(el); });
+  } else {
+    heads.forEach(function (el) { el.classList.add('in'); });
   }
 
   /* ── 내비게이션 현재 위치 표시 (스크롤스파이) ─────────── */
