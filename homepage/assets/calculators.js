@@ -619,7 +619,12 @@
     }
   ];
 
-  global.JEONGEL_CALCS = CALCS;
+  /* 노출 순서 — 기업가치(모든 판단의 출발점) → 자산 개인화 → 리스크 정리 → 승계·상속.
+     정의 순서와 분리해 두어, 순서를 바꿔도 계산 로직에는 영향이 없다. */
+  var ORDER = ['valuation', 'payout', 'severance', 'loan', 'succession', 'inheritance', 'giftplan'];
+  global.JEONGEL_CALCS = ORDER.map(function (id) {
+    return CALCS.filter(function (c) { return c.id === id; })[0];
+  }).filter(Boolean);
   global.JEONGEL_FMT = { won: won, pct: pct, num: num };
 
 })(window);

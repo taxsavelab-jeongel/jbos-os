@@ -380,7 +380,7 @@ ${bodyHtml(a.body)}
       <div class="section-head"><p class="kicker">MORE INSIGHTS</p><h2>다른 인사이트</h2></div>
       <ul class="related">
 ${others.map((o) => `        <li><a href="../${o.slug}/"><b>${esc(o.title)}</b><span>${esc(o.desc)}</span></a></li>`).join('\n')}
-        <li><a href="${base}insights/"><b>전체 인사이트 보기</b><span>세법 개정, 실무 쟁점, 승계 설계에 관한 글을 모았습니다.</span></a></li>
+        <li><a href="${base}insights/"><b>전체 인사이트 보기</b><span>세법 개정, 실무 쟁점, 기업가치와 자산 설계에 관한 글을 모았습니다.</span></a></li>
       </ul>
     </div>
   </section>
@@ -412,8 +412,8 @@ function insightIndex() {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>인사이트 | 세법 개정·실무 쟁점·승계 설계 — 정엘기업연구소</title>
-<meta name="description" content="세법 개정, 판례, 실무 쟁점을 중소기업 오너의 관점에서 정리합니다. 가업승계 증여특례 개정, 가지급금 정리 시점, 비상장주식 평가 타이밍 등.">
+<title>인사이트 | 세법 개정·실무 쟁점·기업가치 설계 — 정엘기업연구소</title>
+<meta name="description" content="세법 개정, 판례, 실무 쟁점을 중소기업 오너의 관점에서 정리합니다. 비상장주식 평가 타이밍, 가지급금 정리 시점, 증여특례 개정 등 기업가치와 세부담을 함께 다룹니다.">
 <link rel="canonical" href="${SITE}/insights/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#381513">
