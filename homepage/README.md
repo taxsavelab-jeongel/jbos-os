@@ -74,11 +74,27 @@ python3 -m http.server 8899 --directory homepage
 # http://127.0.0.1:8899
 ```
 
-## 남은 연결 작업
+## 상담 신청 폼 → 리드 자동화
 
-- **상담 신청 폼**: 현재는 입력값을 정리해 `taxsavelab@gmail.com` 메일 작성 창을 여는 방식입니다.
-  기존 리드 자동화(구글 폼 → Apps Script → 마스터DB → 텔레그램)에 연결하려면
-  `site.js`의 `#leadForm` submit 핸들러를 폼 전송으로 교체하고,
-  마스터DB 스프레드시트에 캠페인 탭을 추가하십시오 (`jeongel-offer-deployment` 스킬 참조).
+폼은 구글폼 `formResponse` 엔드포인트로 직접 전송되어 기존 파이프라인에 그대로 연결됩니다.
+
+```
+홈페이지 폼 → 구글폼 → 마스터DB「홈페이지 상담신청」탭
+                          ├─ 공용 Apps Script : 텔레그램 알림 + 원본백업
+                          └─ 캠페인 Apps Script: 신청자 확인 메일
+```
+
+연결에 필요한 코드와 절차는 **[`integration/`](integration/README.md)** 에 있습니다.
+`site.js` 상단 `LEAD_CONFIG` 한 블록만 채우면 연동이 끝나며, 그 블록은
+`integration/apps-script-campaign.gs` 의 `setupConsultForm()` 을 한 번 실행하면
+실행 로그에 붙여넣기 가능한 형태로 출력됩니다.
+
+`LEAD_CONFIG`가 비어 있는 동안에는 **메일 작성 창을 여는 방식으로 자동 대체 동작**하므로
+연동 전에도 사이트를 그대로 운영할 수 있습니다.
+
+폼 검증 항목: 필수값 · 이메일 형식 · 연락처 자릿수 · 개인정보 동의 · 허니팟 봇 차단 · 중복 전송 방지.
+
+## 참고
+
 - **웹폰트**: Noto Serif KR / Noto Sans KR을 Google Fonts에서 불러옵니다.
   폰트 로드가 실패해도 시스템 명조·고딕으로 자연스럽게 대체됩니다.

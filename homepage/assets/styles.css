@@ -36,6 +36,9 @@
 
 * { box-sizing: border-box; }
 
+/* display 를 지정한 요소에도 hidden 속성이 동작하도록 (예: 전송 완료 후 폼 숨김) */
+[hidden] { display: none !important; }
+
 html { scroll-behavior: smooth; scroll-padding-top: 86px; }
 
 body {
@@ -389,8 +392,27 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .contact-card textarea { resize: vertical; font-family: var(--sans); }
 .contact-card input:focus, .contact-card select:focus, .contact-card textarea:focus { border-color: var(--green); }
+.contact-card label.check {
+  display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start;
+  padding: 14px 14px; background: var(--cream); border: 1px solid var(--line);
+  font-size: 12px; font-weight: 400; color: var(--muted); line-height: 1.65;
+}
+.contact-card label.check input { width: 18px; height: 18px; padding: 0; margin-top: 2px; accent-color: var(--green); }
+.contact-card label.check b { display: block; font-size: 13px; color: var(--text); margin-bottom: 3px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
 .form-note { font-size: 13px; color: var(--green); min-height: 18px; }
 .form-note.err { color: #A73A22; }
+#leadSubmit[disabled] { opacity: .55; cursor: progress; }
+
+.form-done { text-align: center; padding: 34px 10px 26px; }
+.form-done-mark {
+  width: 54px; height: 54px; margin: 0 auto 18px; border-radius: 50%;
+  background: var(--green); color: var(--gold); font-size: 27px; line-height: 54px; font-weight: 700;
+}
+.form-done h4 { font-family: var(--serif); font-size: 21px; color: var(--forest); }
+.form-done p { margin-top: 12px; font-size: 14.5px; color: var(--muted); line-height: 1.85; }
+.form-done a { color: var(--green); font-weight: 700; }
 .contact-alt { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); text-align: center; }
 .contact-alt a { font-weight: 700; color: var(--green); }
 
