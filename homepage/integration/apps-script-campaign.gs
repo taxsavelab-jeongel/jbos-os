@@ -54,7 +54,7 @@ function setupConsultForm() {
 
   var form = FormApp.create(FORM_TITLE);
   form.setDescription(
-    '정엘가업승계연구소 상담 신청서입니다.\n' +
+    '정엘기업연구소 상담 신청서입니다.\n' +
     '남겨주신 정보는 상담 안내 목적으로만 사용하며, 24시간 이내에 연락드립니다.'
   );
   form.setCollectEmail(false);
@@ -238,10 +238,10 @@ function sendConsultMail(e) {
   if (!consent) { Logger.log('개인정보 미동의 — 발송하지 않습니다. (%s)', company); return; }
   if (!email || email.indexOf('@') === -1) { Logger.log('이메일 없음 — 발송하지 않습니다. (%s)', company); return; }
 
-  var subject = '[정엘가업승계연구소] 상담 신청이 접수되었습니다';
+  var subject = '[정엘기업연구소] 상담 신청이 접수되었습니다';
   var body =
     (name || '대표') + '님, 안녕하십니까.\n' +
-    '정엘가업승계연구소입니다. 상담 신청이 정상적으로 접수되었습니다.\n\n' +
+    '정엘기업연구소입니다. 상담 신청이 정상적으로 접수되었습니다.\n\n' +
     '─────────────────────────────\n' +
     ' 회사명   : ' + company + '\n' +
     ' 성함     : ' + name + '\n' +
@@ -261,10 +261,10 @@ function sendConsultMail(e) {
     '승계는 하나의 문제가 아니라 세무·법무·노무가 서로 얽힌 구조의 문제입니다.\n' +
     '기업이 건강하게 성장할 구조 자체를 함께 설계하겠습니다.\n\n' +
     '문의 ' + TEL + '\n' +
-    '정엘가업승계연구소 · 서울 서초구 반포대로 79, 5층\n' +
+    '정엘기업연구소 · 서울 서초구 반포대로 79, 5층\n' +
     '"승계가 필요한 그 순간을 넘어, 진심을 담은 실력으로 보답하겠습니다."\n';
 
-  MailApp.sendEmail({ to: email, subject: subject, body: body, name: '정엘가업승계연구소 정선의' });
+  MailApp.sendEmail({ to: email, subject: subject, body: body, name: '정엘기업연구소 정선의' });
   Logger.log('확인 메일 발송 완료 → %s (%s)', email, company);
 }
 

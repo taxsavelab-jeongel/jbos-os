@@ -5,7 +5,7 @@
  * body 는 그 검색어로 들어온 사람이 실제로 알고 싶어 하는 것을 설명한다.
  * 계산기만 덩그러니 있는 얇은 페이지는 색인은 되어도 순위가 오르지 않는다.
  */
-export const SITE = 'https://jeongel.co.kr';
+export const SITE = 'https://jeongellab.com';
 
 export const TOOLS = [
   {

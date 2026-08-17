@@ -1,4 +1,4 @@
-# 정엘가업승계연구소 (JEONGEL Business Succession Lab)
+# 정엘기업연구소 (JEONGEL Corporate Research Lab)
 
 > 중소기업 오너의 가업승계를 설계하는 전문 연구소입니다. 서울 서초구 소재.
 > 승계를 기업의 끝이 아니라 더 큰 번영의 시작으로 만드는 것을 목표로,
@@ -6,7 +6,7 @@
 
 ## 핵심 정보
 
-- 상호: 정엘가업승계연구소
+- 상호: 정엘기업연구소
 - 주소: 서울특별시 서초구 반포대로 79, 5층
 - 대표번호: 02-523-3757 / 승계 설계 상담: 010-5500-9632
 - 이메일: taxsavelab@gmail.com
@@ -26,19 +26,19 @@
 
 ## 무료 진단 도구 7종 (각각 독립 페이지)
 
-1. 가업승계 증여세 계산기 — https://jeongel.co.kr/tools/succession-gift-tax/
+1. 가업승계 증여세 계산기 — https://jeongellab.com/tools/succession-gift-tax/
    가업승계 증여특례 적용 vs 일반 증여세율 세액 비교 (조특법 §30의6)
-2. 상속세 계산기 — https://jeongel.co.kr/tools/inheritance-tax/
+2. 상속세 계산기 — https://jeongellab.com/tools/inheritance-tax/
    일괄·배우자·금융재산·가업상속공제 반영 예상 납부세액 (상증법 §18의2·19·21·22)
-3. 비상장주식 가치평가 계산기 — https://jeongel.co.kr/tools/stock-valuation/
+3. 비상장주식 가치평가 계산기 — https://jeongellab.com/tools/stock-valuation/
    상증법 보충적 평가 1주당 가액, 순손익가치·순자산가치 가중평균 (상증법 §63, 시행령 §54)
-4. 가지급금 계산기 — https://jeongel.co.kr/tools/directors-loan/
+4. 가지급금 계산기 — https://jeongellab.com/tools/directors-loan/
    인정이자·상여처분·특수관계 소멸 시 일시 과세 (법인세법 §28·52)
-5. 임원 퇴직금 한도 계산기 — https://jeongel.co.kr/tools/executive-severance/
+5. 임원 퇴직금 한도 계산기 — https://jeongellab.com/tools/executive-severance/
    퇴직소득 한도 판정 및 환산급여 방식 세후 실수령액 (소득세법 §22④2·§48)
-6. 이익잉여금 인출 계산기 — https://jeongel.co.kr/tools/retained-earnings/
+6. 이익잉여금 인출 계산기 — https://jeongellab.com/tools/retained-earnings/
    급여·배당·퇴직금 3경로 실수령 비교 (소득세법 §55·129)
-7. 사전증여 계산기 — https://jeongel.co.kr/tools/gift-planning/
+7. 사전증여 계산기 — https://jeongellab.com/tools/gift-planning/
    10년 합산 주기 활용 분산 증여 효과, 세대생략 할증 (상증법 §53·57)
 
 모든 계산은 현행 세법 기준 간이 추정이며, 실제 세액은 사업무관자산 비율·지분구조·평가 시점에

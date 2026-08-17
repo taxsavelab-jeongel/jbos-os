@@ -1,4 +1,4 @@
-# 정엘가업승계연구소 — robots.txt
+# 정엘기업연구소 — robots.txt
 
 # ── 일반 검색엔진 ──
 User-agent: *
@@ -47,4 +47,4 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-Sitemap: https://jeongel.co.kr/sitemap.xml
+Sitemap: https://jeongellab.com/sitemap.xml

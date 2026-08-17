@@ -27,11 +27,11 @@ const MARK = `<svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
 function header(base) {
   return `<header class="site-header solid" id="header">
   <div class="shell header-inner">
-    <a class="logo" href="${base}" aria-label="정엘가업승계연구소 홈">
+    <a class="logo" href="${base}" aria-label="정엘기업연구소 홈">
       ${MARK}
       <span class="logo-text">
-        <b>정엘가업승계연구소</b>
-        <i>JEONGEL BUSINESS SUCCESSION LAB</i>
+        <b>정엘기업연구소</b>
+        <i>JEONGEL CORPORATE RESEARCH LAB</i>
       </span>
     </a>
     <nav class="nav" id="nav" aria-label="주 메뉴">
@@ -61,14 +61,14 @@ function footer(base) {
       <p class="footer-claim">세대를 넘어, 시대를 넘어,<br>성장이 이어지는 건강한 부를 완성합니다.</p>
     </div>
     <div class="footer-meta">
-      <p><b>정엘가업승계연구소</b></p>
+      <p><b>정엘기업연구소</b></p>
       <address>서울특별시 서초구 반포대로 79, 5층 · <a href="tel:02-523-3757">02-523-3757</a> · <a href="mailto:taxsavelab@gmail.com">taxsavelab@gmail.com</a></address>
       <p>사업자등록번호 208-88-01033 · 통신판매업신고 제2025-서울서초-0459호 · 개인정보책임자 우예슬</p>
       <p class="footer-legal">
         본 사이트의 계산 결과와 게시물은 일반적인 정보 제공을 목적으로 하며 특정 거래에 대한 세무 자문이 아닙니다.
         게시된 실적 수치는 정엘 네트워크 기준 누적치입니다.
       </p>
-      <p class="footer-copy">© 2026 JEONGEL Business Succession Lab. All rights reserved.</p>
+      <p class="footer-copy">© 2026 JEONGEL Corporate Research Lab. All rights reserved.</p>
     </div>
   </div>
 </footer>
@@ -140,17 +140,17 @@ function page(t) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(t.title)} | 정엘가업승계연구소</title>
+<title>${esc(t.title)} | 정엘기업연구소</title>
 <meta name="description" content="${esc(t.desc)}">
 <link rel="canonical" href="${url}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-<meta name="author" content="정엘가업승계연구소">
+<meta name="author" content="정엘기업연구소">
 <meta name="theme-color" content="#381513">
 
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="정엘가업승계연구소">
+<meta property="og:site_name" content="정엘기업연구소">
 <meta property="og:url" content="${url}">
-<meta property="og:title" content="${esc(t.title)} | 정엘가업승계연구소">
+<meta property="og:title" content="${esc(t.title)} | 정엘기업연구소">
 <meta property="og:description" content="${esc(t.desc)}">
 <meta property="og:image" content="${SITE}/assets/og-image.png">
 <meta property="og:image:width" content="1200">
