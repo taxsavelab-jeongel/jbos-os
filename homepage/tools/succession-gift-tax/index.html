@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가업승계 증여세 계산기 | 증여특례 vs 일반증여 세액 비교 | 정엘가업승계연구소</title>
+<meta name="description" content="가업승계 증여특례를 적용할 때와 일반 증여세율을 적용할 때 세금이 얼마나 차이 나는지 계산합니다. 부모의 가업 영위기간별 한도와 사업무관자산 비율을 반영한 무료 시뮬레이터입니다.">
+<link rel="canonical" href="https://jeongel.co.kr/tools/succession-gift-tax/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="author" content="정엘가업승계연구소">
+<meta name="theme-color" content="#381513">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="정엘가업승계연구소">
+<meta property="og:url" content="https://jeongel.co.kr/tools/succession-gift-tax/">
+<meta property="og:title" content="가업승계 증여세 계산기 | 증여특례 vs 일반증여 세액 비교 | 정엘가업승계연구소">
+<meta property="og:description" content="가업승계 증여특례를 적용할 때와 일반 증여세율을 적용할 때 세금이 얼마나 차이 나는지 계산합니다. 부모의 가업 영위기간별 한도와 사업무관자산 비율을 반영한 무료 시뮬레이터입니다.">
+<meta property="og:image" content="https://jeongel.co.kr/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="가업승계 증여세 계산기 | 증여특례 vs 일반증여 세액 비교">
+<meta name="twitter:description" content="가업승계 증여특례를 적용할 때와 일반 증여세율을 적용할 때 세금이 얼마나 차이 나는지 계산합니다. 부모의 가업 영위기간별 한도와 사업무관자산 비율을 반영한 무료 시뮬레이터입니다.">
+<meta name="twitter:image" content="https://jeongel.co.kr/assets/og-image.png">
+
+<link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://jeongel.co.kr/tools/succession-gift-tax/#app",
+      "name": "가업승계 증여세 계산기",
+      "url": "https://jeongel.co.kr/tools/succession-gift-tax/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "ko-KR",
+      "description": "가업승계 증여특례를 적용할 때와 일반 증여세율을 적용할 때 세금이 얼마나 차이 나는지 계산합니다. 부모의 가업 영위기간별 한도와 사업무관자산 비율을 반영한 무료 시뮬레이터입니다.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "provider": {
+        "@id": "https://jeongel.co.kr/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "홈",
+          "item": "https://jeongel.co.kr/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "전문 진단 도구",
+          "item": "https://jeongel.co.kr/#tools"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "가업승계 증여세 계산기",
+          "item": "https://jeongel.co.kr/tools/succession-gift-tax/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://jeongel.co.kr/tools/succession-gift-tax/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "가업승계 증여특례 한도는 얼마입니까?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "부모의 가업 영위기간에 따라 다릅니다. 10년 이상이면 300억 원, 20년 이상이면 400억 원, 30년 이상이면 600억 원이 한도입니다. 한도를 넘는 금액에는 일반 증여세율이 적용됩니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "가업승계 증여특례 세율은 몇 퍼센트입니까?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "과세가액에서 10억 원을 공제한 과세표준 기준으로, 120억 원까지는 10%, 초과분은 20%입니다. 다만 특례세율이 적용되는 부분에는 신고세액공제 3%가 적용되지 않습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "가지급금이 있으면 가업승계 특례를 못 받습니까?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "못 받는 것은 아니지만 불리해집니다. 가지급금은 국세청 예규상 명백한 사업무관자산이라 그 비율만큼 특례 대상에서 제외되고, 제외된 금액에는 일반 증여세율이 적용됩니다. 증여 전에 정리하는 것이 원칙이며 통상 6개월 이상 걸립니다."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="tool-page">
+
+<a class="skip" href="#main">본문 바로가기</a>
+
+<header class="site-header solid" id="header">
+  <div class="shell header-inner">
+    <a class="logo" href="../../" aria-label="정엘가업승계연구소 홈">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="3" fill="currentColor"/>
+        <path d="M11 11h18M20 11v18M11 29h18" stroke="#C0111F" stroke-width="2.1" stroke-linecap="square" fill="none"/>
+        <circle cx="20" cy="20" r="3.1" fill="#C0111F"/>
+      </svg>
+      <span class="logo-text">
+        <b>정엘가업승계연구소</b>
+        <i>JEONGEL BUSINESS SUCCESSION LAB</i>
+      </span>
+    </a>
+    <nav class="nav" id="nav" aria-label="주 메뉴">
+      <a href="../../#philosophy">브랜드 철학</a>
+      <a href="../../#solutions">승계 솔루션</a>
+      <a href="../../#tools">전문 진단 도구</a>
+      <a href="../../#process">상담 프로세스</a>
+      <a href="../../#insight">인사이트</a>
+      <a href="https://lp.jeongellab.com" class="nav-cta">상담 신청</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell">
+    <nav class="breadcrumb" aria-label="위치">
+      <a href="../../">홈</a><span aria-hidden="true">›</span>
+      <a href="../../#tools">전문 진단 도구</a><span aria-hidden="true">›</span>
+      <em>가업승계 증여세 계산기</em>
+    </nav>
+  </div>
+
+  <section class="page-hero">
+    <div class="shell">
+      <p class="kicker">무료 진단 도구</p>
+      <h1>가업승계 증여세 계산기</h1>
+      <p class="page-lead">자녀에게 주식을 넘길 때 특례를 쓰느냐 마느냐로 세금이 수억에서 수십억까지 갈립니다. 우리 회사가 그 차이의 어느 쪽에 있는지 먼저 확인하십시오.</p>
+    </div>
+  </section>
+
+  <section class="section tool-calc">
+    <div class="shell">
+      <div class="calc single">
+        <div class="calc-stage">
+          <div class="calc-panel" id="calcPanel" data-calc="succession"></div>
+        </div>
+      </div>
+      <p class="calc-disclaimer dark-off">
+        현행 세법을 기준으로 한 <b>간이 추정</b>입니다. 실제 세액은 사업무관자산 비율, 지분구조,
+        평가 시점, 개별 공제 요건에 따라 달라집니다. 의사결정 전 반드시 전문가의 개별 검토를 받으십시오.
+      </p>
+    </div>
+  </section>
+
+  <section class="section prose-section">
+    <div class="shell prose">
+      <h2>가업승계 증여세 과세특례란</h2>
+      <p>조세특례제한법 제30조의6이 정한 제도입니다. 만 60세 이상 부모가 10년 이상 영위한 가업의 주식을 만 18세 이상 자녀에게 증여하면, 일반 증여세율(최고 50%) 대신 특례세율을 적용합니다.</p>
+      <p>과세가액에서 10억 원을 공제한 뒤, 과세표준 120억 원까지는 10%, 그 초과분은 20%가 적용됩니다. 일반 증여였다면 50% 구간에 들어갈 금액이 10%로 내려가는 것이라 차이가 큽니다.</p>
+
+      <h2>한도는 부모의 가업 영위기간이 정합니다</h2>
+      <p>특례를 받을 수 있는 금액에는 상한이 있고, 그 상한은 부모가 그 가업을 몇 년 했느냐로 정해집니다.</p>
+      <ul class="prose-list">
+        <li>가업 영위기간 10년 이상 20년 미만 — 300억 원</li>
+        <li>가업 영위기간 20년 이상 30년 미만 — 400억 원</li>
+        <li>가업 영위기간 30년 이상 — 600억 원</li>
+      </ul>
+      <p>여기서 자주 틀리는 것이 기산점입니다. 창업일이 아니라 세법상 가업을 영위한 기간이며, 주된 업종이 바뀌었다면 그 시점부터 다시 셉니다. 법인전환을 했다면 개인사업자 기간을 통산할 수 있는지가 별도 쟁점입니다. 기산점 하나로 한도가 300억에서 600억까지 움직입니다.</p>
+
+      <h2>사업무관자산이 있으면 그만큼 특례에서 빠집니다</h2>
+      <p>특례는 회사 전체가 아니라 “가업자산상당액”에만 적용됩니다. 총자산 중 사업과 무관한 자산이 차지하는 비율만큼은 특례 대상에서 제외되고, 그 부분은 일반 증여세율로 과세됩니다.</p>
+      <ul class="prose-list">
+        <li>대표이사·특수관계인에 대한 가지급금</li>
+        <li>만기 3개월(국세청 기준 91일)을 초과하는 금융상품, 질권이 설정된 금융상품</li>
+        <li>임대 중인 부동산</li>
+        <li>업무와 무관하게 과다 보유한 현금</li>
+      </ul>
+      <p>가지급금 정리가 승계 세액에 직접 영향을 주는 이유가 여기에 있습니다. 정리에는 통상 6개월 이상이 걸리므로, 증여 시점을 정하기 전에 먼저 손대야 하는 항목입니다.</p>
+
+      <h2>받고 끝이 아닙니다 — 사후관리</h2>
+      <p>특례를 적용받은 뒤 요건을 지키지 못하면 특례가 취소되고 세액에 이자상당액까지 붙어 추징됩니다.</p>
+      <ul class="prose-list">
+        <li>수증자는 증여세 신고기한까지 가업에 종사해야 합니다</li>
+        <li>증여일로부터 3년 이내에 대표이사로 취임해야 합니다</li>
+        <li>5년간 가업을 유지하고 지분을 줄이지 않아야 합니다</li>
+      </ul>
+      <p>“증여만 하고 요건은 나중에”가 가장 위험합니다. 후계자의 대표이사 취임 계획이 서지 않은 상태라면, 증여 시점을 앞당기는 것보다 계획을 먼저 세우는 편이 안전합니다.</p>
+
+    </div>
+  </section>
+
+  <section class="section faq-section">
+    <div class="shell">
+      <div class="section-head"><p class="kicker">FAQ</p><h2>자주 묻는 질문</h2></div>
+      <div class="faq">
+        <details>
+          <summary>가업승계 증여특례 한도는 얼마입니까?</summary>
+          <div><p>부모의 가업 영위기간에 따라 다릅니다. 10년 이상이면 300억 원, 20년 이상이면 400억 원, 30년 이상이면 600억 원이 한도입니다. 한도를 넘는 금액에는 일반 증여세율이 적용됩니다.</p></div>
+        </details>
+        <details>
+          <summary>가업승계 증여특례 세율은 몇 퍼센트입니까?</summary>
+          <div><p>과세가액에서 10억 원을 공제한 과세표준 기준으로, 120억 원까지는 10%, 초과분은 20%입니다. 다만 특례세율이 적용되는 부분에는 신고세액공제 3%가 적용되지 않습니다.</p></div>
+        </details>
+        <details>
+          <summary>가지급금이 있으면 가업승계 특례를 못 받습니까?</summary>
+          <div><p>못 받는 것은 아니지만 불리해집니다. 가지급금은 국세청 예규상 명백한 사업무관자산이라 그 비율만큼 특례 대상에서 제외되고, 제외된 금액에는 일반 증여세율이 적용됩니다. 증여 전에 정리하는 것이 원칙이며 통상 6개월 이상 걸립니다.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section related-section">
+    <div class="shell">
+      <div class="section-head"><p class="kicker">OTHER TOOLS</p><h2>다른 진단 도구</h2></div>
+      <ul class="related">
+        <li><a href="../inheritance-tax/"><b>상속세 계산기</b><span>상속세는 “줄이는 일”과 “낼 돈을 만드는 일”이 함께 가야 합니다. 먼저 얼마인지부터 확인하십시오.</span></a></li>
+        <li><a href="../stock-valuation/"><b>비상장주식 가치평가 계산기</b><span>승계도 증여도 매각도 여기서 시작합니다. 우리 회사 주식 1주가 세법상 얼마인지 모르면 세금도, 한도 초과 여부도 계산할 수 없습니다.</span></a></li>
+        <li><a href="../directors-loan/"><b>가지급금 계산기</b><span>가지급금은 가만히 둬도 매년 돈이 빠져나갑니다. 그리고 대표가 퇴직하는 순간 한 번에 청구서가 옵니다.</span></a></li>
+        <li><a href="../executive-severance/"><b>임원 퇴직금 한도 계산기</b><span>임원 퇴직금은 이익잉여금을 인출하면서 상속세 재원까지 만드는 수단입니다. 다만 한도를 넘으면 세금 구조가 통째로 바뀝니다.</span></a></li>
+        <li><a href="../retained-earnings/"><b>이익잉여금 인출 계산기</b><span>쌓인 이익을 어떻게 꺼내느냐에 따라 손에 남는 돈이 두 배 가까이 차이 납니다. 같은 금액을 기준으로 세 경로를 나란히 비교하십시오.</span></a></li>
+        <li><a href="../gift-planning/"><b>사전증여 계산기</b><span>같은 재산을 넘겨도 누구에게, 몇 번에 걸쳐 넘기느냐로 세금이 달라집니다. 다만 이 설계는 시간이 필요합니다.</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tool-cta">
+    <div class="shell tool-cta-inner">
+      <div>
+        <h2>계산 결과를 가지고<br><span class="hi">상담을 신청하십시오</span></h2>
+        <p>이 도구는 판단의 출발점을 만들기 위한 간이 버전입니다.
+        실제 설계에는 재무제표·주주명부·정관 확인이 필요합니다.</p>
+      </div>
+      <div class="tool-cta-act">
+        <a class="btn btn-accent" href="https://lp.jeongellab.com">상담 신청하기</a>
+        <a class="tool-tel" href="tel:010-5500-9632">전화 상담 010-5500-9632</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div class="footer-brand">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="3" fill="#C0111F"/>
+        <path d="M11 11h18M20 11v18M11 29h18" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="square" fill="none"/>
+        <circle cx="20" cy="20" r="3.1" fill="#FFFFFF"/>
+      </svg>
+      <p class="footer-claim">세대를 넘어, 시대를 넘어,<br>성장이 이어지는 건강한 부를 완성합니다.</p>
+    </div>
+    <div class="footer-meta">
+      <p><b>정엘가업승계연구소</b></p>
+      <address>서울특별시 서초구 반포대로 79, 5층 · <a href="tel:02-523-3757">02-523-3757</a> · <a href="mailto:taxsavelab@gmail.com">taxsavelab@gmail.com</a></address>
+      <p>사업자등록번호 208-88-01033 · 통신판매업신고 제2025-서울서초-0459호 · 개인정보책임자 우예슬</p>
+      <p class="footer-legal">
+        본 사이트의 계산 결과와 게시물은 일반적인 정보 제공을 목적으로 하며 특정 거래에 대한 세무 자문이 아닙니다.
+        게시된 실적 수치는 정엘 네트워크 기준 누적치입니다.
+      </p>
+      <p class="footer-copy">© 2026 JEONGEL Business Succession Lab. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<a class="float-cta" href="tel:010-5500-9632" aria-label="전화 상담 010-5500-9632">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2Z"/></svg>
+  <span>전화 상담</span>
+</a>
+
+<script src="../../assets/calculators.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

@@ -527,3 +527,67 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 .site-footer address { font-style: normal; }
+
+/* ═══════════════ 도구 상세 페이지 ═══════════════ */
+/* 도구 페이지 헤더는 sticky — 흐름 공간을 차지하므로 body 상단 여백을 따로 주지 않는다 */
+.tool-page .site-header { position: sticky; }
+.tool-page { scroll-padding-top: 90px; }
+
+.breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; padding: 22px 0 0; font-size: 13px; color: var(--quiet); }
+.breadcrumb a { color: var(--muted); }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb em { font-style: normal; color: var(--brand); font-weight: 700; }
+.breadcrumb span { color: var(--line-deep); }
+
+.page-hero { padding: 46px 0 40px; border-bottom: 1px solid var(--line); }
+.page-hero h1 { font-size: clamp(30px, 4.6vw, 46px); color: var(--brand); }
+.page-lead { margin-top: 18px; max-width: 780px; font-size: 17px; font-weight: 300; color: var(--muted); line-height: 1.9; }
+
+.tool-calc { background: var(--cream); padding: 56px 0 60px; }
+.calc.single { grid-template-columns: 1fr; }
+.calc.single .calc-stage { padding: 34px 36px 40px; }
+.calc-disclaimer.dark-off { color: var(--quiet); }
+.calc-disclaimer.dark-off b { color: var(--muted); }
+
+.prose-section { padding: 84px 0 76px; }
+.prose { max-width: 820px; }
+.prose h2 {
+  font-size: clamp(22px, 2.8vw, 29px); color: var(--brand);
+  margin: 52px 0 20px; padding-top: 26px; border-top: 1px solid var(--line);
+}
+.prose h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.prose p { font-size: 16px; color: var(--muted); line-height: 2; margin-bottom: 16px; }
+.prose-list { margin: 6px 0 20px; padding: 22px 26px; background: var(--cream); border-left: 3px solid var(--accent); }
+.prose-list li { position: relative; padding-left: 18px; font-size: 15.5px; color: var(--text); line-height: 1.85; margin-bottom: 10px; }
+.prose-list li:last-child { margin-bottom: 0; }
+.prose-list li::before { content: ""; position: absolute; left: 0; top: 12px; width: 6px; height: 6px; background: var(--brand); }
+
+.faq-section { background: var(--cream); padding: 78px 0; }
+.faq-section .section-head { margin-bottom: 34px; }
+
+.related-section { padding: 78px 0; }
+.related { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.related a { display: block; height: 100%; padding: 24px 22px; border: 1px solid var(--line); transition: .22s; }
+.related a:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow-soft); }
+.related b { display: block; font-family: var(--serif); font-size: 17px; color: var(--brand); margin-bottom: 8px; }
+.related span { display: block; font-size: 13.5px; color: var(--muted); line-height: 1.75; }
+
+.tool-cta { background: var(--brand); color: #fff; padding: 76px 0; }
+.tool-cta-inner { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; }
+.tool-cta h2 { font-size: clamp(24px, 3.2vw, 34px); color: #fff; }
+.tool-cta p { margin-top: 16px; font-size: 15.5px; color: rgba(255,255,255,.72); font-weight: 300; line-height: 1.9; }
+.tool-cta-act { display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+.tool-tel { text-align: center; padding: 14px 24px; border: 1px solid rgba(255,255,255,.4); font-size: 14.5px; font-weight: 700; border-radius: 2px; }
+.tool-tel:hover { background: rgba(255,255,255,.1); border-color: #fff; }
+
+/* 홈 도구 목록 → 상세 페이지 링크 */
+.tools-index li a { display: block; }
+.tools-index li a:hover b { color: var(--hi); text-decoration: underline; text-underline-offset: 4px; }
+.tools-index .more { display: inline-block; margin-top: 8px; font-size: 12.5px; color: var(--hi); font-weight: 700; }
+
+@media (max-width: 900px) {
+  .related { grid-template-columns: 1fr; }
+  .tool-cta-inner { grid-template-columns: 1fr; }
+  .prose-section { padding: 60px 0 54px; }
+  .calc.single .calc-stage { padding: 24px 20px 30px; }
+}

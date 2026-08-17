@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이익잉여금 인출 계산기 | 급여·배당·퇴직금 세부담 비교 | 정엘가업승계연구소</title>
+<meta name="description" content="회사가 같은 세전 재원을 쓴다고 할 때 급여, 배당, 퇴직금 중 어느 경로가 대표에게 가장 많이 남는지 비교합니다. 4대보험과 법인세 효과까지 반영합니다.">
+<link rel="canonical" href="https://jeongel.co.kr/tools/retained-earnings/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="author" content="정엘가업승계연구소">
+<meta name="theme-color" content="#381513">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="정엘가업승계연구소">
+<meta property="og:url" content="https://jeongel.co.kr/tools/retained-earnings/">
+<meta property="og:title" content="이익잉여금 인출 계산기 | 급여·배당·퇴직금 세부담 비교 | 정엘가업승계연구소">
+<meta property="og:description" content="회사가 같은 세전 재원을 쓴다고 할 때 급여, 배당, 퇴직금 중 어느 경로가 대표에게 가장 많이 남는지 비교합니다. 4대보험과 법인세 효과까지 반영합니다.">
+<meta property="og:image" content="https://jeongel.co.kr/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="이익잉여금 인출 계산기 | 급여·배당·퇴직금 세부담 비교">
+<meta name="twitter:description" content="회사가 같은 세전 재원을 쓴다고 할 때 급여, 배당, 퇴직금 중 어느 경로가 대표에게 가장 많이 남는지 비교합니다. 4대보험과 법인세 효과까지 반영합니다.">
+<meta name="twitter:image" content="https://jeongel.co.kr/assets/og-image.png">
+
+<link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://jeongel.co.kr/tools/retained-earnings/#app",
+      "name": "이익잉여금 인출 계산기",
+      "url": "https://jeongel.co.kr/tools/retained-earnings/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "ko-KR",
+      "description": "회사가 같은 세전 재원을 쓴다고 할 때 급여, 배당, 퇴직금 중 어느 경로가 대표에게 가장 많이 남는지 비교합니다. 4대보험과 법인세 효과까지 반영합니다.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "provider": {
+        "@id": "https://jeongel.co.kr/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "홈",
+          "item": "https://jeongel.co.kr/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "전문 진단 도구",
+          "item": "https://jeongel.co.kr/#tools"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "이익잉여금 인출 계산기",
+          "item": "https://jeongel.co.kr/tools/retained-earnings/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://jeongel.co.kr/tools/retained-earnings/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "배당과 급여 중 어느 쪽이 유리합니까?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "회사가 투입하는 세전 재원을 같게 놓고 비교하면 대체로 급여가 유리합니다. 급여는 손금으로 인정되어 법인세가 줄어드는 반면 배당은 법인세를 먼저 부담한 뒤 지급되기 때문입니다. 다만 4대보험 부담과 대표의 기존 소득 수준에 따라 결과가 달라지므로 실제 수치로 계산해야 합니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "미처분이익잉여금이 쌓여 있으면 무엇이 문제입니까?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "순자산가치가 올라가 비상장주식 평가액이 커집니다. 그만큼 증여세와 상속세가 늘어나므로, 승계를 앞두고 있다면 이익잉여금을 어떤 속도로 인출할지가 승계 세액에 직접 영향을 줍니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "배당소득은 얼마부터 종합과세됩니까?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "연간 금융소득(이자·배당) 합계 2,000만 원까지는 15.4%로 분리과세되고, 초과분은 다른 소득과 합산해 종합과세됩니다."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="tool-page">
+
+<a class="skip" href="#main">본문 바로가기</a>
+
+<header class="site-header solid" id="header">
+  <div class="shell header-inner">
+    <a class="logo" href="../../" aria-label="정엘가업승계연구소 홈">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="3" fill="currentColor"/>
+        <path d="M11 11h18M20 11v18M11 29h18" stroke="#C0111F" stroke-width="2.1" stroke-linecap="square" fill="none"/>
+        <circle cx="20" cy="20" r="3.1" fill="#C0111F"/>
+      </svg>
+      <span class="logo-text">
+        <b>정엘가업승계연구소</b>
+        <i>JEONGEL BUSINESS SUCCESSION LAB</i>
+      </span>
+    </a>
+    <nav class="nav" id="nav" aria-label="주 메뉴">
+      <a href="../../#philosophy">브랜드 철학</a>
+      <a href="../../#solutions">승계 솔루션</a>
+      <a href="../../#tools">전문 진단 도구</a>
+      <a href="../../#process">상담 프로세스</a>
+      <a href="../../#insight">인사이트</a>
+      <a href="https://lp.jeongellab.com" class="nav-cta">상담 신청</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell">
+    <nav class="breadcrumb" aria-label="위치">
+      <a href="../../">홈</a><span aria-hidden="true">›</span>
+      <a href="../../#tools">전문 진단 도구</a><span aria-hidden="true">›</span>
+      <em>이익잉여금 인출 계산기</em>
+    </nav>
+  </div>
+
+  <section class="page-hero">
+    <div class="shell">
+      <p class="kicker">무료 진단 도구</p>
+      <h1>이익잉여금 인출 계산기</h1>
+      <p class="page-lead">쌓인 이익을 어떻게 꺼내느냐에 따라 손에 남는 돈이 두 배 가까이 차이 납니다. 같은 금액을 기준으로 세 경로를 나란히 비교하십시오.</p>
+    </div>
+  </section>
+
+  <section class="section tool-calc">
+    <div class="shell">
+      <div class="calc single">
+        <div class="calc-stage">
+          <div class="calc-panel" id="calcPanel" data-calc="payout"></div>
+        </div>
+      </div>
+      <p class="calc-disclaimer dark-off">
+        현행 세법을 기준으로 한 <b>간이 추정</b>입니다. 실제 세액은 사업무관자산 비율, 지분구조,
+        평가 시점, 개별 공제 요건에 따라 달라집니다. 의사결정 전 반드시 전문가의 개별 검토를 받으십시오.
+      </p>
+    </div>
+  </section>
+
+  <section class="section prose-section">
+    <div class="shell prose">
+      <h2>왜 세 경로를 같은 기준으로 비교해야 합니까</h2>
+      <p>급여·배당·퇴직금은 회사 쪽 처리가 서로 다릅니다. 급여와 퇴직금은 회사의 비용(손금)이지만 배당은 아닙니다. 배당은 법인세를 이미 낸 이익에서 나가므로, 같은 금액을 지급해도 회사가 실제로 쓴 재원은 더 큽니다.</p>
+      <p>그래서 “배당 1억 vs 급여 1억”처럼 지급액만 놓고 비교하면 배당에 유리하게 왜곡됩니다. 회사가 투입하는 세전 재원을 동일하게 맞춰야 비교가 성립합니다.</p>
+
+      <h2>급여 — 손금이지만 4대보험이 붙습니다</h2>
+      <p>회사의 비용으로 인정되어 법인세가 줄어듭니다. 대신 대표에게는 근로소득세가 붙고, 국민연금·건강보험·장기요양보험이 회사와 개인 양쪽에서 발생합니다.</p>
+      <p>급여는 다른 소득과 합산되는 종합과세라, 이미 소득이 큰 대표에게는 한계세율이 높게 적용됩니다.</p>
+
+      <h2>배당 — 손금이 아닙니다</h2>
+      <p>배당은 세후 이익을 나누는 것이므로 회사의 비용이 아닙니다. 법인세를 먼저 부담한 뒤 남은 금액만 지급할 수 있습니다.</p>
+      <p>개인은 연 2,000만 원까지 15.4%로 분리과세되고, 초과분은 다른 소득과 합산해 종합과세됩니다. 4대보험 부담이 없다는 점은 장점이지만, 법인세를 선납한다는 구조적 불리함이 큽니다.</p>
+
+      <h2>퇴직금 — 분류과세라 세율이 가장 낮은 경우가 많습니다</h2>
+      <p>회사의 비용으로 인정되면서, 개인에게는 퇴직소득으로 분류과세됩니다. 다른 소득과 합산되지 않고 근속연수에 따라 세부담이 크게 낮아집니다.</p>
+      <p>다만 한 번뿐이고, 임원 퇴직소득 한도와 정관 규정을 먼저 충족해야 합니다. 한도를 넘는 금액은 근로소득으로 과세되어 이점이 사라집니다.</p>
+
+      <h2>현실적인 답은 “하나 고르기”가 아닙니다</h2>
+      <p>계산해 보면 퇴직금이 가장 유리하게 나오는 경우가 많지만, 퇴직금은 퇴직할 때 한 번입니다. 실제 설계는 매년 급여와 배당을 어떤 비율로 가져가고 퇴직 시점에 얼마를 남겨둘지를 연도별로 배분하는 문제입니다.</p>
+      <p>여기에 승계까지 얹히면 계산이 한 겹 더 붙습니다. 이익잉여금이 쌓인 채로 두면 순자산가치가 올라 주식 평가액이 커지고, 그만큼 증여세와 상속세가 늘어나기 때문입니다.</p>
+
+    </div>
+  </section>
+
+  <section class="section faq-section">
+    <div class="shell">
+      <div class="section-head"><p class="kicker">FAQ</p><h2>자주 묻는 질문</h2></div>
+      <div class="faq">
+        <details>
+          <summary>배당과 급여 중 어느 쪽이 유리합니까?</summary>
+          <div><p>회사가 투입하는 세전 재원을 같게 놓고 비교하면 대체로 급여가 유리합니다. 급여는 손금으로 인정되어 법인세가 줄어드는 반면 배당은 법인세를 먼저 부담한 뒤 지급되기 때문입니다. 다만 4대보험 부담과 대표의 기존 소득 수준에 따라 결과가 달라지므로 실제 수치로 계산해야 합니다.</p></div>
+        </details>
+        <details>
+          <summary>미처분이익잉여금이 쌓여 있으면 무엇이 문제입니까?</summary>
+          <div><p>순자산가치가 올라가 비상장주식 평가액이 커집니다. 그만큼 증여세와 상속세가 늘어나므로, 승계를 앞두고 있다면 이익잉여금을 어떤 속도로 인출할지가 승계 세액에 직접 영향을 줍니다.</p></div>
+        </details>
+        <details>
+          <summary>배당소득은 얼마부터 종합과세됩니까?</summary>
+          <div><p>연간 금융소득(이자·배당) 합계 2,000만 원까지는 15.4%로 분리과세되고, 초과분은 다른 소득과 합산해 종합과세됩니다.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section related-section">
+    <div class="shell">
+      <div class="section-head"><p class="kicker">OTHER TOOLS</p><h2>다른 진단 도구</h2></div>
+      <ul class="related">
+        <li><a href="../succession-gift-tax/"><b>가업승계 증여세 계산기</b><span>자녀에게 주식을 넘길 때 특례를 쓰느냐 마느냐로 세금이 수억에서 수십억까지 갈립니다. 우리 회사가 그 차이의 어느 쪽에 있는지 먼저 확인하십시오.</span></a></li>
+        <li><a href="../inheritance-tax/"><b>상속세 계산기</b><span>상속세는 “줄이는 일”과 “낼 돈을 만드는 일”이 함께 가야 합니다. 먼저 얼마인지부터 확인하십시오.</span></a></li>
+        <li><a href="../stock-valuation/"><b>비상장주식 가치평가 계산기</b><span>승계도 증여도 매각도 여기서 시작합니다. 우리 회사 주식 1주가 세법상 얼마인지 모르면 세금도, 한도 초과 여부도 계산할 수 없습니다.</span></a></li>
+        <li><a href="../directors-loan/"><b>가지급금 계산기</b><span>가지급금은 가만히 둬도 매년 돈이 빠져나갑니다. 그리고 대표가 퇴직하는 순간 한 번에 청구서가 옵니다.</span></a></li>
+        <li><a href="../executive-severance/"><b>임원 퇴직금 한도 계산기</b><span>임원 퇴직금은 이익잉여금을 인출하면서 상속세 재원까지 만드는 수단입니다. 다만 한도를 넘으면 세금 구조가 통째로 바뀝니다.</span></a></li>
+        <li><a href="../gift-planning/"><b>사전증여 계산기</b><span>같은 재산을 넘겨도 누구에게, 몇 번에 걸쳐 넘기느냐로 세금이 달라집니다. 다만 이 설계는 시간이 필요합니다.</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tool-cta">
+    <div class="shell tool-cta-inner">
+      <div>
+        <h2>계산 결과를 가지고<br><span class="hi">상담을 신청하십시오</span></h2>
+        <p>이 도구는 판단의 출발점을 만들기 위한 간이 버전입니다.
+        실제 설계에는 재무제표·주주명부·정관 확인이 필요합니다.</p>
+      </div>
+      <div class="tool-cta-act">
+        <a class="btn btn-accent" href="https://lp.jeongellab.com">상담 신청하기</a>
+        <a class="tool-tel" href="tel:010-5500-9632">전화 상담 010-5500-9632</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div class="footer-brand">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="3" fill="#C0111F"/>
+        <path d="M11 11h18M20 11v18M11 29h18" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="square" fill="none"/>
+        <circle cx="20" cy="20" r="3.1" fill="#FFFFFF"/>
+      </svg>
+      <p class="footer-claim">세대를 넘어, 시대를 넘어,<br>성장이 이어지는 건강한 부를 완성합니다.</p>
+    </div>
+    <div class="footer-meta">
+      <p><b>정엘가업승계연구소</b></p>
+      <address>서울특별시 서초구 반포대로 79, 5층 · <a href="tel:02-523-3757">02-523-3757</a> · <a href="mailto:taxsavelab@gmail.com">taxsavelab@gmail.com</a></address>
+      <p>사업자등록번호 208-88-01033 · 통신판매업신고 제2025-서울서초-0459호 · 개인정보책임자 우예슬</p>
+      <p class="footer-legal">
+        본 사이트의 계산 결과와 게시물은 일반적인 정보 제공을 목적으로 하며 특정 거래에 대한 세무 자문이 아닙니다.
+        게시된 실적 수치는 정엘 네트워크 기준 누적치입니다.
+      </p>
+      <p class="footer-copy">© 2026 JEONGEL Business Succession Lab. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<a class="float-cta" href="tel:010-5500-9632" aria-label="전화 상담 010-5500-9632">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2Z"/></svg>
+  <span>전화 상담</span>
+</a>
+
+<script src="../../assets/calculators.js"></script>
+<script src="../../assets/site.js"></script>
+</body>
+</html>

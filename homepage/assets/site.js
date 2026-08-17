@@ -16,9 +16,14 @@
   var toggle = $('#navToggle');
   var floatCta = $('.float-cta');
 
+  /* 도구 상세 페이지는 배경이 흰색이라 헤더를 항상 solid 로 둔다.
+     (기본 동작대로 두면 스크롤 0에서 solid 가 벗겨져 로고가 흰 배경에 흰 글자로 사라진다) */
+  var alwaysSolid = document.body.classList.contains('tool-page');
+  if (alwaysSolid) header.classList.add('solid');
+
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;
-    header.classList.toggle('solid', y > 40);
+    if (!alwaysSolid) header.classList.toggle('solid', y > 40);
     if (floatCta) floatCta.classList.toggle('show', y > 620);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -236,9 +241,16 @@
     out.innerHTML = html;
   }
 
-  if (CALCS.length && tabsEl && panelEl) {
-    buildTabs();
-    selectTab(0);
+  /* 홈: 탭 7개 / 도구 상세 페이지: data-calc 로 지정된 계산기 하나만 */
+  if (CALCS.length && panelEl) {
+    var only = panelEl.getAttribute('data-calc');
+    if (only) {
+      var picked = CALCS.filter(function (c) { return c.id === only; })[0];
+      if (picked) renderCalc(picked);
+    } else if (tabsEl) {
+      buildTabs();
+      selectTab(0);
+    }
   }
 
   /* ── 연도 ─────────────────────────────────────────────── */
