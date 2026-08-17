@@ -591,3 +591,123 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .prose-section { padding: 60px 0 54px; }
   .calc.single .calc-stage { padding: 24px 20px 30px; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   톤 조정 — 버건디/레드는 포인트로만.
+   히어로·도구·상담 섹션을 밝은 배경으로 전환하고,
+   어두운 면은 관점전환 섹션과 푸터로만 남긴다.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── 히어로: 화이트 베이스 ── */
+.hero { color: var(--text); border-bottom: 1px solid var(--line); }
+.hero-bg {
+  background:
+    radial-gradient(900px 460px at 88% -6%, rgba(192,17,31,.055), transparent 62%),
+    radial-gradient(700px 420px at 2% 100%, rgba(226,236,242,.9), transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #FCFDFE 100%);
+}
+.hero-bg::after { opacity: .55;
+  background-image:
+    linear-gradient(rgba(56,21,19,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,21,19,.022) 1px, transparent 1px);
+}
+.hero-inner { padding: 170px 24px 92px; }
+.hero .eyebrow { color: var(--accent); }
+.hero .eyebrow::before { background: var(--accent); }
+.hero h1 { color: var(--brand); font-size: clamp(34px, 5.4vw, 60px); }
+.hero-lead { color: var(--muted); }
+.hero-slogan { color: var(--brand); border-left-color: var(--accent); }
+
+.btn-outline { background: transparent; color: var(--brand); border-color: var(--line-deep); }
+.btn-outline:hover { border-color: var(--brand); background: var(--brand); color: #fff; }
+
+/* ── 목적 요약 바 ── */
+.metrics { background: var(--cream); border-top: 1px solid var(--line); }
+.goalbar { display: flex; align-items: center; gap: 28px; padding-top: 22px; padding-bottom: 22px; flex-wrap: wrap; }
+.goalbar-label {
+  flex: 0 0 auto; font-size: 11.5px; font-weight: 700; letter-spacing: .18em;
+  color: var(--accent); text-transform: uppercase;
+}
+.goalbar ol { display: flex; flex: 1; flex-wrap: wrap; gap: 10px 30px; }
+.goalbar li { display: flex; align-items: baseline; gap: 8px; }
+.goalbar li + li { padding-left: 30px; border-left: 1px solid var(--line-deep); }
+.goalbar b { font-family: var(--serif); font-size: 16.5px; color: var(--brand); }
+.goalbar span { font-size: 13px; color: var(--quiet); }
+
+/* ── 목적별 경로 ── */
+.goals { background: var(--paper); }
+.goal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.goal { border: 1px solid var(--line); padding: 34px 32px 30px; transition: .24s; background: var(--paper); }
+.goal:hover { border-color: var(--accent); box-shadow: var(--shadow-soft); }
+.goal-no { font-family: var(--serif); font-size: 12.5px; letter-spacing: .2em; color: var(--accent); }
+.goal h3 { margin: 12px 0 4px; font-size: 25px; color: var(--brand); }
+.goal-sub { font-size: 13.5px; color: var(--quiet); margin-bottom: 20px; }
+.goal dl { border-top: 1px solid var(--line); padding-top: 16px; }
+.goal dt {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .1em; color: var(--accent);
+  margin-top: 14px;
+}
+.goal dt:first-child { margin-top: 0; }
+.goal dd { font-size: 14.5px; color: var(--muted); line-height: 1.8; margin-top: 4px; }
+.goal-note {
+  margin-top: 26px; padding: 20px 24px; background: var(--cream);
+  border-left: 3px solid var(--accent); font-size: 14.5px; color: var(--muted); line-height: 1.9;
+}
+.goal-note b { color: var(--brand); }
+
+/* ── 도구 섹션: 밝은 배경 ── */
+.tools { background: var(--cream); }
+.tools-index { background: var(--paper); border-color: var(--line); }
+.tools-index h3 { color: var(--brand); }
+.tools-index li::before { color: var(--accent); }
+.tools-index b { color: var(--brand); }
+.tools-index span { color: var(--muted); }
+.tools-index em { color: var(--accent); }
+.tools-index li a:hover b { color: var(--accent); }
+.tools-index .more { color: var(--accent); }
+.calc-disclaimer { color: var(--quiet); }
+.calc-disclaimer b { color: var(--muted); }
+
+/* ── 프로세스 4단계 ── */
+.steps-4 { grid-template-columns: repeat(4, 1fr); }
+.process { background: var(--paper); }
+
+/* ── 상담 섹션: 밝은 배경 ── */
+.contact { background: var(--cream); color: var(--text); }
+.contact-copy h2 { color: var(--brand); }
+.contact-copy > p { color: var(--muted); }
+.contact-list { border-top-color: var(--line); }
+.contact-list li { border-bottom-color: var(--line); }
+.contact-list span { color: var(--accent); }
+.contact-list a[href]:hover { color: var(--accent); }
+
+@media (max-width: 900px) {
+  .goal-grid { grid-template-columns: 1fr; }
+  .steps-4 { grid-template-columns: 1fr; }
+  .goalbar { gap: 14px; }
+  .goalbar li + li { padding-left: 0; border-left: 0; }
+  .goalbar ol { gap: 8px 20px; }
+  .hero-inner { padding: 140px 24px 72px; }
+}
+
+
+/* ── 헤더: 전 페이지 밝은 배경이 되었으므로 항상 solid ── */
+.site-header, .site-header.solid {
+  background: rgba(255,255,255,.96);
+  backdrop-filter: saturate(180%) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.logo, .site-header .logo { color: var(--brand); }
+.site-header .logo-text i { color: var(--accent); }
+.site-header .nav a { color: var(--muted); }
+.site-header .nav a:hover { color: var(--accent); }
+.site-header .nav .nav-cta { color: var(--accent); border-color: var(--accent); }
+.site-header .nav .nav-cta:hover { background: var(--accent); color: #fff; }
+.site-header .nav-toggle span { background: var(--brand); }
+
+/* ── 히어로 제목: 레드 대신 브랜드 버건디로. 레드는 작은 요소에만 ── */
+.hero h1, .hero h1 .accent { color: var(--brand); }
+
+/* dl 기본 들여쓰기 제거 */
+.goal dd { margin-left: 0; }

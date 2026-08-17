@@ -18,7 +18,7 @@
 
   /* 도구 상세 페이지는 배경이 흰색이라 헤더를 항상 solid 로 둔다.
      (기본 동작대로 두면 스크롤 0에서 solid 가 벗겨져 로고가 흰 배경에 흰 글자로 사라진다) */
-  var alwaysSolid = document.body.classList.contains('tool-page');
+  var alwaysSolid = true;   /* 전 페이지가 밝은 배경이므로 헤더는 항상 solid */
   if (alwaysSolid) header.classList.add('solid');
 
   function onScroll() {
